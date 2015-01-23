@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="@string/pref_control_juego_titulo">
         <ListPreference
+            android:defaultValue="tactil"
             android:dialogTitle="@string/pref_control_juego_nombre"
             android:entries="@array/pref_control_juego_entries"
             android:entryValues="@array/pref_control_juego_values"
@@ -12,11 +13,13 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_musica_titulo">
         <SwitchPreference
+            android:defaultValue="true"
             android:key="@string/pref_musica"
             android:summaryOff="@string/pref_musica_summary_off"
             android:summaryOn="@string/pref_musica_summary_on"
             android:title="@string/pref_musica_titulo" />
         <com.aitor1995.proyecto.preferences.NumberPickerPreference
+            android:defaultValue="100"
             android:dependency="@string/pref_musica"
             android:key="@string/pref_valor_volumen"
             android:title="@string/pref_valor_volumen_nombre"

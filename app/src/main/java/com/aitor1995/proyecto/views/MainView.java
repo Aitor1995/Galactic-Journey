@@ -59,27 +59,30 @@ public class MainView extends View {
             case MotionEvent.ACTION_DOWN:
                 float iniX = (anchoPantalla - btnJugar.getWidth()) / 2;
                 float iniY = altoPantalla * 0.4f;
-                if (x > iniX && x < iniX + btnJugar.getWidth() && y > iniY && y < iniY + btnJugar.getHeight()) {
+                if (x > iniX && x < iniX + btnJugar.getWidth() && y > iniY && y < iniY + btnJugar.getHeight())
                     isBtnJugarPulsado = true;
-                    mListener.onJugarClick();
-                }
                 iniX = (anchoPantalla - btnRecords.getWidth()) / 2;
                 iniY = altoPantalla * 0.55f;
-                if (x > iniX && x < iniX + btnRecords.getWidth() && y > iniY && y < iniY + btnRecords.getHeight()) {
+                if (x > iniX && x < iniX + btnRecords.getWidth() && y > iniY && y < iniY + btnRecords.getHeight())
                     isBtnRecordsPulsado = true;
-                    mListener.onRecordsClick();
-                }
                 iniX = (anchoPantalla - btnOpciones.getWidth()) / 2;
                 iniY = altoPantalla * 0.7f;
-                if (x > iniX && x < iniX + btnOpciones.getWidth() && y > iniY && y < iniY + btnOpciones.getHeight()) {
+                if (x > iniX && x < iniX + btnOpciones.getWidth() && y > iniY && y < iniY + btnOpciones.getHeight())
                     isBtnOpcionesPulsado = true;
-                    mListener.onOpcionesClick();
-                }
                 break;
             case MotionEvent.ACTION_UP:
-                isBtnJugarPulsado = false;
-                isBtnRecordsPulsado = false;
-                isBtnOpcionesPulsado = false;
+                if (isBtnJugarPulsado) {
+                    isBtnJugarPulsado = false;
+                    mListener.onJugarClick();
+                }
+                if (isBtnRecordsPulsado) {
+                    isBtnRecordsPulsado = false;
+                    mListener.onRecordsClick();
+                }
+                if (isBtnOpcionesPulsado) {
+                    isBtnOpcionesPulsado = false;
+                    mListener.onOpcionesClick();
+                }
                 break;
         }
         invalidate();
