@@ -1,5 +1,6 @@
 package com.aitor1995.proyecto.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aitor1995.proyecto.R;
+import com.aitor1995.proyecto.activities.JuegoActivity;
 import com.aitor1995.proyecto.listeners.OnButtonClick;
 import com.aitor1995.proyecto.views.MainView;
 
@@ -21,7 +23,7 @@ public class MainFragment extends Fragment implements OnButtonClick {
 
     @Override
     public void onJugarClick() {
-        System.err.println("jugarClick");
+        startActivity(new Intent(getActivity(), JuegoActivity.class));
     }
 
     @Override
