@@ -85,7 +85,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 bitmapFondo = Bitmap.createScaledBitmap(bitmapFondo, bitmapFondo.getWidth(), mAltoPantalla, true);
                 fondos = new Fondo[2];
                 fondos[0] = new Fondo(bitmapFondo, 0, 0);
-                fondos[1] = new Fondo(bitmapFondo, fondos[0].posicion.x + bitmapFondo.getHeight(), 0);
+                fondos[1] = new Fondo(bitmapFondo, fondos[0].posicion.x + bitmapFondo.getWidth(), 0);
             }
         }
     }
@@ -100,17 +100,12 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     private void actualizarFisica() {
-        fondos[0].mover(6);
-        fondos[1].mover(6);
-        if (Math.abs(fondos[0].posicion.x) > mAltoPantalla) {
-            System.err.println("movido fondo 0");
-            fondos[0].posicion.x = fondos[1].posicion.x + fondos[0].imagen.getHeight();
-        }
-        if (Math.abs(fondos[1].posicion.x) > mAltoPantalla) {
-            System.err.println("movido fondo 1");
-            fondos[1].posicion.x = fondos[0].posicion.x + fondos[1].imagen.getHeight();
-        }
-
+        fondos[0].mover(3);
+        fondos[1].mover(3);
+        if (fondos[0].posicion.x < -fondos[0].imagen.getWidth())
+            fondos[0].posicion.x = fondos[1].posicion.x + fondos[0].imagen.getWidth();
+        if (fondos[1].posicion.x < -fondos[1].imagen.getWidth())
+            fondos[1].posicion.x = fondos[0].posicion.x + fondos[1].imagen.getWidth();
     }
 
     public Hilo getHilo() {
