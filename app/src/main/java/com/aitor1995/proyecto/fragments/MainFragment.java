@@ -1,8 +1,8 @@
 package com.aitor1995.proyecto.fragments;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +34,9 @@ public class MainFragment extends Fragment implements OnButtonClick {
     @Override
     public void onOpcionesClick() {
         getActivity().getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.animator.slide_left_enter, R.animator.slide_left_exit, R.animator.slide_right_enter, R.animator.slide_right_exit)
                 .replace(R.id.container, new AjustesFragment())
-                .addToBackStack("preferencias")
+                .addToBackStack(null)
                 .commit();
     }
 }
