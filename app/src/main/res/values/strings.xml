@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Proyecto</string>
+    <string name="opciones">Opciones</string>
     <!-- Preferencias -->
     <string name="pref_control_juego_titulo">Control del Juego</string>
     <string name="pref_control_juego">pref_control_juego</string>
