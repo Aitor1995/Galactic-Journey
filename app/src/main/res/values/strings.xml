@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">Proyecto</string>
+    <!-- Menú principal -->
+    <string name="jugar">Jugar</string>
+    <string name="record">Récords</string>
     <string name="opciones">Opciones</string>
     <!-- Preferencias -->
     <string name="pref_control_juego_titulo">Control del Juego</string>

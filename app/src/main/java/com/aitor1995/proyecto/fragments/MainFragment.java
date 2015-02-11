@@ -9,29 +9,25 @@ import android.view.ViewGroup;
 
 import com.aitor1995.proyecto.R;
 import com.aitor1995.proyecto.activities.JuegoActivity;
-import com.aitor1995.proyecto.listeners.OnButtonClick;
-import com.aitor1995.proyecto.views.MainView;
 
-public class MainFragment extends Fragment implements OnButtonClick {
+public class MainFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        MainView view = new MainView(getActivity());
-        view.onButtonSelected(this);
-        return view;
+        return inflater.inflate(R.layout.fragment_menu, container, false);
     }
 
-    @Override
+
     public void onJugarClick() {
         startActivity(new Intent(getActivity(), JuegoActivity.class));
     }
 
-    @Override
+
     public void onRecordsClick() {
 
     }
 
-    @Override
+
     public void onOpcionesClick() {
         getActivity().getFragmentManager().beginTransaction()
                 .setCustomAnimations(R.animator.slide_left_enter, R.animator.slide_left_exit, R.animator.slide_right_enter, R.animator.slide_right_exit)
