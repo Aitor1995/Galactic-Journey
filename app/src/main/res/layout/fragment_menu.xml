@@ -10,7 +10,9 @@
         android:id="@+id/botonJugar"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/boton" />
+        android:background="@drawable/boton"
+        android:onClick="onJugarClick"
+        android:textSize="25sp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -19,8 +21,10 @@
         android:id="@+id/botonRecords"
         android:layout_below="@+id/botonJugar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/boton" />
+        android:layout_marginTop="30dp"
+        android:background="@drawable/boton"
+        android:onClick="onRecordsClick"
+        android:textSize="25sp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -29,6 +33,8 @@
         android:id="@+id/buttonOpciones"
         android:layout_below="@+id/botonRecords"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/boton" />
+        android:layout_marginTop="30dp"
+        android:background="@drawable/boton"
+        android:onClick="onOpcionesClick"
+        android:textSize="25sp" />
 </RelativeLayout>
