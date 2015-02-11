@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 
 import com.aitor1995.proyecto.R;
 import com.aitor1995.proyecto.clases.Fondo;
+import com.aitor1995.proyecto.clases.Nave;
 import com.aitor1995.proyecto.utils.AjustesApp;
 
 public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
@@ -19,6 +20,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private final AjustesApp ajustes;
     public MediaPlayer mediaPlayer;
     private Fondo[] fondos;
+    private Nave nave;
     private Hilo hilo;
     private boolean funcionando = false;
     private int anchoPantalla;
@@ -89,6 +91,10 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 fondos = new Fondo[2];
                 fondos[0] = new Fondo(bitmapFondo, 0, 0);
                 fondos[1] = new Fondo(bitmapFondo, fondos[0].posicion.x + bitmapFondo.getWidth(), 0);
+
+                Bitmap bitmapNave = BitmapFactory.decodeResource(context.getResources(), R.drawable.nave1_azul);
+                nave = new Nave(bitmapNave, (anchoPantalla - bitmapNave.getWidth()) / 2, (int) (0.8 * altoPantalla));
+                nave.girar(90);
             }
         }
     }
@@ -98,6 +104,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             canvas.drawRGB(255, 255, 255);
             canvas.drawBitmap(fondos[0].imagen, fondos[0].posicion.x, fondos[0].posicion.y, null);
             canvas.drawBitmap(fondos[1].imagen, fondos[1].posicion.x, fondos[1].posicion.y, null);
+            canvas.drawBitmap(nave.imagen, nave.posicion.x, nave.posicion.y, null);
         } catch (Exception ignored) {
         }
     }
@@ -109,6 +116,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             fondos[0].posicion.x = fondos[1].posicion.x + fondos[0].imagen.getWidth();
         if (fondos[1].posicion.x < -fondos[1].imagen.getWidth())
             fondos[1].posicion.x = fondos[0].posicion.x + fondos[1].imagen.getWidth();
+
     }
 
     public Hilo getHilo() {
