@@ -8,33 +8,34 @@
         android:layout_height="wrap_content"
         android:text="@string/jugar"
         android:id="@+id/botonJugar"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/boton"
         android:onClick="onJugarClick"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:layout_above="@+id/botonRecords"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/record"
         android:id="@+id/botonRecords"
-        android:layout_below="@+id/botonJugar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
         android:background="@drawable/boton"
         android:onClick="onRecordsClick"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:layout_above="@+id/buttonOpciones"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/opciones"
         android:id="@+id/buttonOpciones"
-        android:layout_below="@+id/botonRecords"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
         android:background="@drawable/boton"
         android:onClick="onOpcionesClick"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp" />
 </RelativeLayout>

@@ -18,12 +18,11 @@
             android:summaryOff="@string/pref_musica_summary_off"
             android:summaryOn="@string/pref_musica_summary_on"
             android:title="@string/pref_musica_titulo" />
-        <com.aitor1995.proyecto.preferences.NumberPickerPreference
+        <com.aitor1995.proyecto.preferences.SeekPreference
             android:defaultValue="100"
             android:dependency="@string/pref_musica"
             android:key="@string/pref_valor_volumen"
             android:title="@string/pref_valor_volumen_nombre"
-            app:max="100"
-            app:min="0" />
+            app:max="100" />
     </PreferenceCategory>
 </PreferenceScreen>

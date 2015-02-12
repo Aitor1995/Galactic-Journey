@@ -5,10 +5,11 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <NumberPicker
-        android:id="@+id/number_picker"
-        android:layout_width="100dip"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true" />
 
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:max="100" />
 </LinearLayout>

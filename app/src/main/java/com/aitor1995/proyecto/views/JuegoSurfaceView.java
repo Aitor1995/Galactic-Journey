@@ -10,7 +10,6 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -136,12 +135,14 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.fondos[0].posicion.x = this.fondos[1].posicion.x + this.fondos[0].imagen.getWidth();
         if (this.fondos[1].posicion.x < -this.fondos[1].imagen.getWidth())
             this.fondos[1].posicion.x = this.fondos[0].posicion.x + this.fondos[1].imagen.getWidth();
-        if (posiciones.entrySet().iterator().hasNext()) {
-            PointF punto = posiciones.entrySet().iterator().next().getValue();
-            if (punto.y < (this.nave.posicion.y + this.nave.imagen.getHeight() / 2)) {
-                this.nave.mover(-4);
-            } else {
-                this.nave.mover(4);
+        if (this.ajustes.controlJuego.equals("tactil")) {
+            if (posiciones.entrySet().iterator().hasNext()) {
+                PointF punto = posiciones.entrySet().iterator().next().getValue();
+                if (punto.y < (this.nave.posicion.y + this.nave.imagen.getHeight() / 2) && this.nave.posicion.y >= 0) {
+                    this.nave.mover(-6);
+                } else if (punto.y > (this.nave.posicion.y + this.nave.imagen.getHeight() / 2) && (this.nave.posicion.y + this.nave.imagen.getHeight()) <= altoPantalla) {
+                    this.nave.mover(6);
+                }
             }
         }
     }
@@ -184,16 +185,12 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                     int pointerID = event.getPointerId(pointerIndex);
                     PointF posicion = new PointF(event.getX(pointerIndex), event.getY(pointerIndex));
                     posiciones.put(pointerID, posicion);
-                    Log.d(TAG, posiciones.toString());
-                    Log.d(TAG, event.toString());
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_POINTER_UP:
                     pointerIndex = event.getActionIndex();
                     pointerID = event.getPointerId(pointerIndex);
                     posiciones.remove(pointerID);
-                    Log.d(TAG, posiciones.toString());
-                    Log.d(TAG, event.toString());
                     break;
                 case MotionEvent.ACTION_MOVE:
                     for (int i = 0; i < event.getPointerCount(); i++) {

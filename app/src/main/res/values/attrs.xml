@@ -1,6 +1,5 @@
 <resources>
-    <declare-styleable name="NumberPickerPreference">
+    <declare-styleable name="SeekPreference">
         <attr name="max" format="integer" />
-        <attr name="min" format="integer" />
     </declare-styleable>
 </resources>

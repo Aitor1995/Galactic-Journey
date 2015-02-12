@@ -6,23 +6,22 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.NumberPicker;
+import android.widget.SeekBar;
 
 import com.aitor1995.proyecto.R;
 
-public class NumberPickerPreference extends DialogPreference {
+public class SeekPreference extends DialogPreference {
 
     private static final int DEFAULT_VALUE = 100;
-    private int mMin, mMax, mDefault;
+    private int mMax, mDefault;
 
-    private NumberPicker mNumberPicker;
+    private SeekBar mSeekBar;
 
-    public NumberPickerPreference(Context context, AttributeSet attrs) {
+    public SeekPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        final TypedArray numberPickerType = context.obtainStyledAttributes(attrs, R.styleable.NumberPickerPreference, 0, 0);
+        final TypedArray numberPickerType = context.obtainStyledAttributes(attrs, R.styleable.SeekPreference, 0, 0);
 
-        mMax = numberPickerType.getInt(R.styleable.NumberPickerPreference_max, 100);
-        mMin = numberPickerType.getInt(R.styleable.NumberPickerPreference_min, 0);
+        mMax = numberPickerType.getInt(R.styleable.SeekPreference_max, 100);
 
         numberPickerType.recycle();
     }
@@ -30,13 +29,11 @@ public class NumberPickerPreference extends DialogPreference {
     @Override
     protected View onCreateDialogView() {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.number_picker_dialog, null);
+        View view = inflater.inflate(R.layout.seek_dialog, null);
 
-        mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
-        mNumberPicker.setMaxValue(mMax);
-        mNumberPicker.setMinValue(mMin);
-        mNumberPicker.setValue(getPersistedInt(mDefault));
-        mNumberPicker.setWrapSelectorWheel(false);
+        mSeekBar = (SeekBar) view.findViewById(R.id.seekBar);
+        mSeekBar.setMax(mMax);
+        mSeekBar.setProgress(mDefault);
 
         return view;
     }
@@ -60,8 +57,9 @@ public class NumberPickerPreference extends DialogPreference {
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
-            persistInt(mNumberPicker.getValue());
-            setSummary(getContext().getResources().getString(R.string.pref_valor_volumen_summary, mNumberPicker.getValue()));
+            mDefault = mSeekBar.getProgress();
+            persistInt(mSeekBar.getProgress());
+            setSummary(getContext().getResources().getString(R.string.pref_valor_volumen_summary, mSeekBar.getProgress()));
         }
     }
 }
