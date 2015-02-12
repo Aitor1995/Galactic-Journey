@@ -20,7 +20,7 @@ public class AjustesApp {
         ajustes = null;
     }
 
-    public SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     public String controlJuego;
     public boolean musica;

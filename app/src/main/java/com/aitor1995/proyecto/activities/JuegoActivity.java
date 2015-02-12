@@ -15,6 +15,7 @@ public class JuegoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         this.ajustes = AjustesApp.getInstance(this);
         this.juegoSurfaceView = new JuegoSurfaceView(this);
+
         setContentView(juegoSurfaceView);
     }
 

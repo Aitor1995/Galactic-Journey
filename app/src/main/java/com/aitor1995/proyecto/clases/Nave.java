@@ -16,17 +16,19 @@ public class Nave extends Imagen {
         int altoNave = this.imagen.getHeight();
         float x = this.posicion.x;
         float y = this.posicion.y;
+        //Rectangulo alas
         this.rectangulos[0] = new RectF(
-                (float) (x + anchoNave * 0.4),
+                (float) (x + anchoNave * 0.15),
                 y,
-                (float) (x + anchoNave * 0.6),
-                altoNave
+                (float) (x + anchoNave * 0.59),
+                y + altoNave
         );
+        //Rectangulo cuerpo
         this.rectangulos[1] = new RectF(
                 x,
-                (float) (y + altoNave * 0.4),
-                anchoNave,
-                (float) (y + altoNave * 0.8)
+                (float) (y + altoNave * 0.41),
+                x + anchoNave,
+                (float) (y + altoNave * 0.59)
         );
     }
 }

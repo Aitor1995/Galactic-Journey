@@ -4,14 +4,24 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.media.MediaPlayer;
+import android.support.annotation.NonNull;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.aitor1995.proyecto.BuildConfig;
 import com.aitor1995.proyecto.R;
 import com.aitor1995.proyecto.clases.Fondo;
 import com.aitor1995.proyecto.clases.Nave;
 import com.aitor1995.proyecto.utils.AjustesApp;
+
+import java.util.HashMap;
 
 public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = JuegoSurfaceView.class.getSimpleName();
@@ -22,6 +32,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Fondo[] fondos;
     private Nave nave;
     private Hilo hilo;
+    final private static HashMap<Integer, PointF> posiciones = new HashMap<>();
+    private Paint paint = new Paint();
     private boolean funcionando = false;
     private int anchoPantalla;
     private int altoPantalla;
@@ -33,6 +45,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
     public JuegoSurfaceView(Context context) {
         super(context);
+        setFocusable(true);
         this.context = context;
         this.surfaceHolder = getHolder();
         this.surfaceHolder.addCallback(this);
@@ -44,7 +57,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.mediaPlayer.start();
         }
         this.hilo = new Hilo();
-        setFocusable(true);
     }
 
     private class Hilo extends Thread {
@@ -93,8 +105,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 fondos[1] = new Fondo(bitmapFondo, fondos[0].posicion.x + bitmapFondo.getWidth(), 0);
 
                 Bitmap bitmapNave = BitmapFactory.decodeResource(context.getResources(), R.drawable.nave1_azul);
-                nave = new Nave(bitmapNave, (anchoPantalla - bitmapNave.getWidth()) / 2, (int) (0.8 * altoPantalla));
-                nave.girar(90);
+                nave = new Nave(bitmapNave, (float) (0.1 * anchoPantalla), (altoPantalla - bitmapNave.getHeight()) / 2);
             }
         }
     }
@@ -102,48 +113,91 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private void dibujar(Canvas canvas) {
         try {
             canvas.drawRGB(255, 255, 255);
-            canvas.drawBitmap(fondos[0].imagen, fondos[0].posicion.x, fondos[0].posicion.y, null);
-            canvas.drawBitmap(fondos[1].imagen, fondos[1].posicion.x, fondos[1].posicion.y, null);
-            canvas.drawBitmap(nave.imagen, nave.posicion.x, nave.posicion.y, null);
+            canvas.drawBitmap(this.fondos[0].imagen, this.fondos[0].posicion.x, this.fondos[0].posicion.y, null);
+            canvas.drawBitmap(this.fondos[1].imagen, this.fondos[1].posicion.x, this.fondos[1].posicion.y, null);
+            canvas.drawBitmap(this.nave.imagen, this.nave.posicion.x, this.nave.posicion.y, null);
+            if (BuildConfig.DEBUG) {
+                for (RectF rectF : this.nave.rectangulos) {
+                    this.paint.setColor(Color.RED);
+                    this.paint.setStyle(Paint.Style.STROKE);
+                    canvas.drawRect(rectF, this.paint);
+                    this.paint.reset();
+                }
+            }
         } catch (Exception ignored) {
         }
     }
 
     private void actualizarFisica() {
-        fondos[0].mover(3);
-        fondos[1].mover(3);
-        if (fondos[0].posicion.x < -fondos[0].imagen.getWidth())
-            fondos[0].posicion.x = fondos[1].posicion.x + fondos[0].imagen.getWidth();
-        if (fondos[1].posicion.x < -fondos[1].imagen.getWidth())
-            fondos[1].posicion.x = fondos[0].posicion.x + fondos[1].imagen.getWidth();
+        this.fondos[0].mover(3);
+        this.fondos[1].mover(3);
+        if (this.fondos[0].posicion.x < -this.fondos[0].imagen.getWidth())
+            this.fondos[0].posicion.x = this.fondos[1].posicion.x + this.fondos[0].imagen.getWidth();
+        if (this.fondos[1].posicion.x < -this.fondos[1].imagen.getWidth())
+            this.fondos[1].posicion.x = this.fondos[0].posicion.x + this.fondos[1].imagen.getWidth();
 
     }
 
     public Hilo getHilo() {
-        return hilo;
+        return this.hilo;
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        if (hilo.getState() == Thread.State.TERMINATED) {
-            hilo = new Hilo();
+        if (this.hilo.getState() == Thread.State.TERMINATED) {
+            this.hilo = new Hilo();
         }
-        hilo.setFuncionando(true);
-        hilo.start();
+        this.hilo.setFuncionando(true);
+        this.hilo.start();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        hilo.setSurfaceSize(width, height);
+        this.hilo.setSurfaceSize(width, height);
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        hilo.setFuncionando(false);
+        this.hilo.setFuncionando(false);
         try {
-            hilo.join();
+            this.hilo.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
+        synchronized (this.surfaceHolder) {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    int pointerIndex = event.getActionIndex();
+                    int pointerID = event.getPointerId(pointerIndex);
+                    PointF posicion = new PointF(event.getX(pointerIndex), event.getY(pointerIndex));
+                    posiciones.put(pointerID, posicion);
+                    Log.d(TAG, posiciones.toString());
+                    Log.d(TAG, event.toString());
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_POINTER_UP:
+                    pointerIndex = event.getActionIndex();
+                    pointerID = event.getPointerId(pointerIndex);
+                    posiciones.remove(pointerID);
+                    Log.d(TAG, posiciones.toString());
+                    Log.d(TAG, event.toString());
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    for (int i = 0; i < event.getPointerCount(); i++) {
+                        pointerID = event.getPointerId(i);
+                        posicion = posiciones.get(pointerID);
+                        if (posicion != null) {
+                            posicion.set(event.getX(i), event.getY(i));
+                        }
+                    }
+                    break;
+            }
+            return true;
         }
     }
 }
