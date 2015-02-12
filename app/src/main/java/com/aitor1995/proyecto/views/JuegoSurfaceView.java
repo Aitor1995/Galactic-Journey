@@ -21,10 +21,11 @@ import com.aitor1995.proyecto.clases.Fondo;
 import com.aitor1995.proyecto.clases.Nave;
 import com.aitor1995.proyecto.utils.AjustesApp;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = JuegoSurfaceView.class.getSimpleName();
+    private static final float MIN_DXDY = 2;
     private final SurfaceHolder surfaceHolder;
     private final Context context;
     private final AjustesApp ajustes;
@@ -32,7 +33,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Fondo[] fondos;
     private Nave nave;
     private Hilo hilo;
-    final private static HashMap<Integer, PointF> posiciones = new HashMap<>();
+    final private static LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
     private Paint paint = new Paint();
     private boolean funcionando = false;
     private int anchoPantalla;
@@ -135,7 +136,14 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.fondos[0].posicion.x = this.fondos[1].posicion.x + this.fondos[0].imagen.getWidth();
         if (this.fondos[1].posicion.x < -this.fondos[1].imagen.getWidth())
             this.fondos[1].posicion.x = this.fondos[0].posicion.x + this.fondos[1].imagen.getWidth();
-
+        if (posiciones.entrySet().iterator().hasNext()) {
+            PointF punto = posiciones.entrySet().iterator().next().getValue();
+            if (punto.y < (this.nave.posicion.y + this.nave.imagen.getHeight() / 2)) {
+                this.nave.mover(-4);
+            } else {
+                this.nave.mover(4);
+            }
+        }
     }
 
     public Hilo getHilo() {
@@ -192,7 +200,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         pointerID = event.getPointerId(i);
                         posicion = posiciones.get(pointerID);
                         if (posicion != null) {
-                            posicion.set(event.getX(i), event.getY(i));
+                            if (Math.abs(posicion.x - event.getX(i)) > MIN_DXDY || Math.abs(posicion.y - event.getY(i)) > MIN_DXDY)
+                                posicion.set(event.getX(i), event.getY(i));
                         }
                     }
                     break;

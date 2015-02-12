@@ -31,4 +31,9 @@ public class Nave extends Imagen {
                 (float) (y + altoNave * 0.59)
         );
     }
+
+    public void mover(int velocidad) {
+        this.posicion.y += velocidad;
+        this.setRectangulos();
+    }
 }
