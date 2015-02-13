@@ -8,8 +8,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -20,21 +25,27 @@ import com.aitor1995.proyecto.clases.Fondo;
 import com.aitor1995.proyecto.clases.Nave;
 import com.aitor1995.proyecto.utils.AjustesApp;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
-public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener {
     private static final String TAG = JuegoSurfaceView.class.getSimpleName();
     private static final float MIN_DXDY = 2;
     private final SurfaceHolder surfaceHolder;
     private final Context context;
     private final AjustesApp ajustes;
     public MediaPlayer mediaPlayer;
+    public SensorManager sensorManager;
     private Fondo[] fondos;
     private Nave nave;
     private Hilo hilo;
-    final private static LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
+    final private LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
+    private float[] gravity;
+    private float[] geomagnetic;
+    private float[] orientacion = new float[3];
+    private float valorOrientacionReferencia;
     private Paint paint = new Paint();
-    private boolean funcionando = false;
+    private boolean funcionando = false, orientacionPrimeraVez = true;
     private int anchoPantalla;
     private int altoPantalla;
     long tiempoDormido = 0;
@@ -136,13 +147,21 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         if (this.fondos[1].posicion.x < -this.fondos[1].imagen.getWidth())
             this.fondos[1].posicion.x = this.fondos[0].posicion.x + this.fondos[1].imagen.getWidth();
         if (this.ajustes.controlJuego.equals("tactil")) {
-            if (posiciones.entrySet().iterator().hasNext()) {
-                PointF punto = posiciones.entrySet().iterator().next().getValue();
+            if (this.posiciones.entrySet().iterator().hasNext()) {
+                PointF punto = this.posiciones.entrySet().iterator().next().getValue();
                 if (punto.y < (this.nave.posicion.y + this.nave.imagen.getHeight() / 2) && this.nave.posicion.y >= 0) {
                     this.nave.mover(-6);
-                } else if (punto.y > (this.nave.posicion.y + this.nave.imagen.getHeight() / 2) && (this.nave.posicion.y + this.nave.imagen.getHeight()) <= altoPantalla) {
+                } else if (punto.y > (this.nave.posicion.y + this.nave.imagen.getHeight() / 2) && (this.nave.posicion.y + this.nave.imagen.getHeight()) <= this.altoPantalla) {
                     this.nave.mover(6);
                 }
+            }
+        } else {
+            if (this.nave.posicion.y < 0 && this.nave.posicion.y <= this.altoPantalla - this.nave.imagen.getHeight()) {
+                this.nave.posicion.y = 0;
+            } else if (this.nave.posicion.y > this.altoPantalla - this.nave.imagen.getHeight()) {
+                this.nave.posicion.y = this.altoPantalla - this.nave.imagen.getHeight();
+            } else {
+                this.nave.mover((int) ((this.orientacion[2] - this.valorOrientacionReferencia) * -13));
             }
         }
     }
@@ -173,6 +192,38 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        synchronized (this.surfaceHolder) {
+            switch (event.sensor.getType()) {
+                case Sensor.TYPE_ACCELEROMETER:
+                    this.gravity = event.values;
+                    break;
+                case Sensor.TYPE_MAGNETIC_FIELD:
+                    this.geomagnetic = event.values;
+                    break;
+            }
+            if (this.gravity != null && this.geomagnetic != null) {
+                float R[] = new float[9];
+                float I[] = new float[9];
+                boolean success = SensorManager.getRotationMatrix(R, I, this.gravity, this.geomagnetic);
+                if (success) {
+                    SensorManager.getOrientation(R, this.orientacion);
+                    //TODO mostrar ventana inicial para calibrar orientación
+                    if (this.orientacionPrimeraVez) {
+                        this.orientacionPrimeraVez = false;
+                        this.valorOrientacionReferencia = this.orientacion[2];
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     @Override

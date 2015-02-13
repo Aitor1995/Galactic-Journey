@@ -1,5 +1,8 @@
 package com.aitor1995.proyecto.activities;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import com.aitor1995.proyecto.utils.AjustesApp;
@@ -15,7 +18,6 @@ public class JuegoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         this.ajustes = AjustesApp.getInstance(this);
         this.juegoSurfaceView = new JuegoSurfaceView(this);
-
         setContentView(juegoSurfaceView);
     }
 
@@ -26,6 +28,9 @@ public class JuegoActivity extends BaseActivity {
             this.pausa = true;
             this.juegoSurfaceView.mediaPlayer.pause();
         }
+        if (this.ajustes.controlJuego.equals("giroscopo")) {
+            this.juegoSurfaceView.sensorManager.unregisterListener(this.juegoSurfaceView);
+        }
     }
 
     @Override
@@ -33,6 +38,11 @@ public class JuegoActivity extends BaseActivity {
         super.onResume();
         if (this.ajustes.musica && pausa) {
             this.juegoSurfaceView.mediaPlayer.start();
+        }
+        if (this.ajustes.controlJuego.equals("giroscopo")) {
+            this.juegoSurfaceView.sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            this.juegoSurfaceView.sensorManager.registerListener(this.juegoSurfaceView, this.juegoSurfaceView.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+            this.juegoSurfaceView.sensorManager.registerListener(this.juegoSurfaceView, this.juegoSurfaceView.sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
         }
     }
 }
