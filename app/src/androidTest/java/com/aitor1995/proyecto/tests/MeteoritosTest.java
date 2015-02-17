@@ -18,8 +18,8 @@ public class MeteoritosTest extends AndroidTestCase {
     public void setUp() throws Exception {
         super.setUp();
         this.resources = this.getContext().getResources();
-        this.meteoritoGrisGrande = BitmapFactory.decodeResource(this.resources, R.drawable.meteorgrey_big3);
-        this.meteoritoMarronGrande = BitmapFactory.decodeResource(this.resources, R.drawable.meteorbrown_big3);
+        this.meteoritoGrisGrande = BitmapFactory.decodeResource(this.resources, R.drawable.meteorgrey_big);
+        this.meteoritoMarronGrande = BitmapFactory.decodeResource(this.resources, R.drawable.meteorbrown_big);
     }
     
     public void testComprobarImagenCorrecta(){

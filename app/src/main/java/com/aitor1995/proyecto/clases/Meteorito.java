@@ -12,7 +12,7 @@ public class Meteorito extends Imagen {
     public Meteorito(Resources res, String color, int tamanio){
         if(color.equals("gris")){
             if(tamanio==3){
-                this.imagen = BitmapFactory.decodeResource(res, R.drawable.meteorgrey_big3);
+                this.imagen = BitmapFactory.decodeResource(res, R.drawable.meteorgrey_big);
             }else if(tamanio==2){
                 
             }else if(tamanio==1){
@@ -22,7 +22,7 @@ public class Meteorito extends Imagen {
             }
         }else if(color.equals("marron")){
             if(tamanio==3){
-                this.imagen = BitmapFactory.decodeResource(res, R.drawable.meteorbrown_big3);
+                this.imagen = BitmapFactory.decodeResource(res, R.drawable.meteorbrown_big);
             }else if(tamanio==2){
 
             }else if(tamanio==1){
