@@ -22,11 +22,13 @@ import android.view.SurfaceView;
 import com.aitor1995.proyecto.BuildConfig;
 import com.aitor1995.proyecto.R;
 import com.aitor1995.proyecto.clases.Fondo;
+import com.aitor1995.proyecto.clases.Meteorito;
 import com.aitor1995.proyecto.clases.Nave;
 import com.aitor1995.proyecto.utils.AjustesApp;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Random;
 
 public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener {
     private static final String TAG = JuegoSurfaceView.class.getSimpleName();
@@ -40,6 +42,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Nave nave;
     private Hilo hilo;
     final private LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
+    private ArrayList<Meteorito> meteritos = new ArrayList<>();
+    private Random random = new Random();
     private float[] gravity;
     private float[] geomagnetic;
     private float[] orientacion = new float[3];
@@ -92,7 +96,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 if (tiempoDormido > 0) {
                     try {
 
-                        Thread.sleep(tiempoDormido / 1000000); //Convertimos a ms
+                        Thread.sleep(tiempoDormido / 1000000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

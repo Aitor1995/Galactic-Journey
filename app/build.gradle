@@ -10,7 +10,10 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        testApplicationId "com.aitor1995.proyecto.tests"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
+    
     buildTypes {
         release {
             minifyEnabled false
