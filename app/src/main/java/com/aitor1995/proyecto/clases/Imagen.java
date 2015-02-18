@@ -11,9 +11,4 @@ public class Imagen {
         this.imagen = imagen;
         this.posicion = new PointF(x, y);
     }
-
-
-    public Imagen() {
-        this(null, 0, 0);
-    }
 }

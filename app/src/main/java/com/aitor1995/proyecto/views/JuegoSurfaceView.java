@@ -14,7 +14,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -39,6 +38,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     public MediaPlayer mediaPlayer;
     public SensorManager sensorManager;
     private Fondo[] fondos;
+    private Bitmap[] bitmapsMeteoritos;
+    private ArrayList<Meteorito> meteoritos = new ArrayList<>();
     private Nave nave;
     private Hilo hilo;
     final private LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
@@ -121,6 +122,16 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
                 Bitmap bitmapNave = BitmapFactory.decodeResource(context.getResources(), R.drawable.nave1_azul);
                 nave = new Nave(bitmapNave, (float) (0.1 * anchoPantalla), (altoPantalla - bitmapNave.getHeight()) / 2);
+
+                bitmapsMeteoritos = new Bitmap[]{
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.meteorbrown_big),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.meteorbrown_med),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.meteorbrown_small),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.meteorgrey_big),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.meteorgrey_med),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.meteorgrey_small),
+                };
+
             }
         }
     }
@@ -139,6 +150,16 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                     this.paint.reset();
                 }
             }
+            for (Meteorito meteorito : meteoritos) {
+                canvas.drawBitmap(meteorito.imagen, meteorito.posicion.x, meteorito.posicion.y, null);
+                if (BuildConfig.DEBUG) {
+                    this.paint.setColor(Color.RED);
+                    this.paint.setStyle(Paint.Style.STROKE);
+                    //TODO rectangulos
+                    this.paint.reset();
+                }
+            }
+
         } catch (Exception ignored) {
         }
     }
@@ -167,6 +188,20 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             } else {
                 this.nave.mover((int) ((this.orientacion[2] - this.valorOrientacionReferencia) * -13));
             }
+        }
+        for (Meteorito meteorito : this.meteoritos) {
+            meteorito.mover();
+        }
+        if (this.random.nextInt(15) == 0) {
+            int numero = this.random.nextInt(6);
+            Meteorito meteorito = new Meteorito(this.bitmapsMeteoritos[numero], //imagen
+                    (this.random.nextFloat() * this.anchoPantalla / 4 + this.anchoPantalla * 3 / 4), //posicion x
+                    (this.random.nextFloat() * this.altoPantalla), //posicion y
+                    Math.abs((numero / 3) - 3), //tamaño
+                    this.random.nextInt(6) + 6, //velocidad
+                    this.random.nextInt(50) - 25 //angulo
+            );
+            this.meteoritos.add(meteorito);
         }
     }
 

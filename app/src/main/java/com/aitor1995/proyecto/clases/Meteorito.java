@@ -1,38 +1,20 @@
 package com.aitor1995.proyecto.clases;
 
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.graphics.RectF;
 
-import com.aitor1995.proyecto.R;
-
 public class Meteorito extends Imagen {
+    private final int tamanio;
+    private final int velocidad;
+    private final int angulo;
     public RectF[] rectangulos = new RectF[2];
-    
-    public Meteorito(Resources res, String color, int tamanio){
-        if(color.equals("gris")){
-            if(tamanio==3){
-                this.imagen = BitmapFactory.decodeResource(res, R.drawable.meteorgrey_big);
-            }else if(tamanio==2){
-                
-            }else if(tamanio==1){
-                
-            }else{
-                throw new IllegalArgumentException(String.format("El tamaño '%d' no es válido.", tamanio));
-            }
-        }else if(color.equals("marron")){
-            if(tamanio==3){
-                this.imagen = BitmapFactory.decodeResource(res, R.drawable.meteorbrown_big);
-            }else if(tamanio==2){
 
-            }else if(tamanio==1){
-
-            }else{
-                throw new IllegalArgumentException(String.format("El tamaño '%d' no es válido.", tamanio));
-            }
-        }else{
-            throw new IllegalArgumentException(String.format("El color '%s' no es válido.", color));
-        }
+    public Meteorito(Bitmap imagen, float x, float y, int tamanio, int velocidad, int angulo) {
+        super(imagen, x, y);
+        this.tamanio = tamanio;
+        this.velocidad = velocidad;
+        this.angulo = angulo;
+        this.setRectangulos();
     }
 
     public void setRectangulos() {
@@ -40,6 +22,11 @@ public class Meteorito extends Imagen {
         int altoMeteorito = this.imagen.getHeight();
         float x = this.posicion.x;
         float y = this.posicion.y;
-        
+
+    }
+
+    public void mover() {
+        this.posicion.x -= this.velocidad * Math.sin(Math.toRadians(90 - this.angulo));
+        this.posicion.y -= this.velocidad * Math.sin(Math.toRadians(this.angulo));
     }
 }
