@@ -44,6 +44,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Hilo hilo;
     final private LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
     private ArrayList<Meteorito> meteritos = new ArrayList<>();
+    private int vidas = 3;
     private Random random = new Random();
     private float[] gravity;
     private float[] geomagnetic;
@@ -142,24 +143,25 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             canvas.drawBitmap(this.fondos[0].imagen, this.fondos[0].posicion.x, this.fondos[0].posicion.y, null);
             canvas.drawBitmap(this.fondos[1].imagen, this.fondos[1].posicion.x, this.fondos[1].posicion.y, null);
             canvas.drawBitmap(this.nave.imagen, this.nave.posicion.x, this.nave.posicion.y, null);
+            this.paint.setColor(Color.RED);
+            this.paint.setStyle(Paint.Style.STROKE);
             if (BuildConfig.DEBUG) {
                 for (RectF rectF : this.nave.rectangulos) {
-                    this.paint.setColor(Color.RED);
-                    this.paint.setStyle(Paint.Style.STROKE);
                     canvas.drawRect(rectF, this.paint);
-                    this.paint.reset();
                 }
             }
+            this.paint.reset();
+            this.paint.setColor(Color.RED);
+            this.paint.setStyle(Paint.Style.STROKE);
             for (Meteorito meteorito : meteoritos) {
                 canvas.drawBitmap(meteorito.imagen, meteorito.posicion.x, meteorito.posicion.y, null);
                 if (BuildConfig.DEBUG) {
-                    this.paint.setColor(Color.RED);
-                    this.paint.setStyle(Paint.Style.STROKE);
-                    //TODO rectangulos
-                    this.paint.reset();
+                    for (RectF rectF : meteorito.rectangulos) {
+                        canvas.drawRect(rectF, this.paint);
+                    }
                 }
             }
-
+            this.paint.reset();
         } catch (Exception ignored) {
         }
     }
@@ -189,17 +191,33 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 this.nave.mover((int) ((this.orientacion[2] - this.valorOrientacionReferencia) * -13));
             }
         }
-        for (Meteorito meteorito : this.meteoritos) {
+        for (int i = meteoritos.size() - 1; i >= 0; i--) {
+            Meteorito meteorito = meteoritos.get(i);
             meteorito.mover();
+            if (meteorito.posicion.x + meteorito.imagen.getWidth() < 0 || meteorito.posicion.y + meteorito.imagen.getHeight() < 0 || meteorito.posicion.y > this.altoPantalla) {
+                meteoritos.remove(i);
+            }
+            for (RectF rectF : this.nave.rectangulos) {
+                for (RectF rectF1 : meteorito.rectangulos) {
+                    if (rectF.intersect(rectF1)) {
+                        this.meteoritos.remove(i);
+                        if (--this.vidas == 0) {
+                            this.funcionando = false;
+                        }
+                        break;
+                    }
+                }
+            }
         }
-        if (this.random.nextInt(15) == 0) {
+        //TODO Mejorar la aparicion de meteoritos
+        if (this.random.nextInt(12) == 0) {
             int numero = this.random.nextInt(6);
             Meteorito meteorito = new Meteorito(this.bitmapsMeteoritos[numero], //imagen
-                    (this.random.nextFloat() * this.anchoPantalla / 4 + this.anchoPantalla * 3 / 4), //posicion x
+                    this.anchoPantalla, //posicion x
                     (this.random.nextFloat() * this.altoPantalla), //posicion y
-                    Math.abs((numero / 3) - 3), //tamaño
-                    this.random.nextInt(6) + 6, //velocidad
-                    this.random.nextInt(50) - 25 //angulo
+                    Math.abs((numero % 3) - 3), //tamaño
+                    this.random.nextInt(10) + 7, //velocidad
+                    this.random.nextInt(40) - 20 //angulo
             );
             this.meteoritos.add(meteorito);
         }
