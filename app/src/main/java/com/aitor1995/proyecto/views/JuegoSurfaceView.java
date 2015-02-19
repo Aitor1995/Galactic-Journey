@@ -153,10 +153,12 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             for (Meteorito meteorito : meteoritos) {
                 canvas.drawBitmap(meteorito.imagen, meteorito.posicion.x, meteorito.posicion.y, null);
                 if (BuildConfig.DEBUG) {
-                    this.paint.setColor(Color.RED);
-                    this.paint.setStyle(Paint.Style.STROKE);
-                    //TODO rectangulos
-                    this.paint.reset();
+                    for (RectF rectF : meteorito.rectangulos) {
+                        this.paint.setColor(Color.RED);
+                        this.paint.setStyle(Paint.Style.STROKE);
+                        canvas.drawRect(rectF, this.paint);
+                        this.paint.reset();
+                    }
                 }
             }
 
@@ -192,16 +194,26 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         for (Meteorito meteorito : this.meteoritos) {
             meteorito.mover();
         }
-        if (this.random.nextInt(15) == 0) {
+        //TODO Mejora de aparicion de meteoritos
+        if (this.random.nextInt(12) == 0) {
             int numero = this.random.nextInt(6);
             Meteorito meteorito = new Meteorito(this.bitmapsMeteoritos[numero], //imagen
-                    (this.random.nextFloat() * this.anchoPantalla / 4 + this.anchoPantalla * 3 / 4), //posicion x
+                    this.anchoPantalla, //posicion x
                     (this.random.nextFloat() * this.altoPantalla), //posicion y
-                    Math.abs((numero / 3) - 3), //tamaño
-                    this.random.nextInt(6) + 6, //velocidad
-                    this.random.nextInt(50) - 25 //angulo
+                    Math.abs((numero % 3) - 3), //tamaño
+                    this.random.nextInt(7) + 7, //velocidad
+                    this.random.nextInt(40) - 20 //angulo
             );
             this.meteoritos.add(meteorito);
+        }
+        for (Meteorito meteorito : this.meteoritos) {
+            for (RectF rectF : this.nave.rectangulos) {
+                for (RectF rectF1 : meteorito.rectangulos) {
+                    if (rectF.intersect(rectF1)) {
+                        funcionando = false;
+                    }
+                }
+            }
         }
     }
 
