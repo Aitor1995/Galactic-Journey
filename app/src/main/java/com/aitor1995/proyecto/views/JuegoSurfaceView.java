@@ -39,12 +39,14 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     public SensorManager sensorManager;
     private Fondo[] fondos;
     private Bitmap[] bitmapsMeteoritos;
+    private Bitmap iconoNaveVida;
+    private Bitmap xVida;
+    private Bitmap numeroVida;
     private ArrayList<Meteorito> meteoritos = new ArrayList<>();
     private Nave nave;
     private Hilo hilo;
     final private LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
     private ArrayList<Meteorito> meteritos = new ArrayList<>();
-    private int vidas = 3;
     private Random random = new Random();
     private float[] gravity;
     private float[] geomagnetic;
@@ -133,6 +135,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         BitmapFactory.decodeResource(context.getResources(), R.drawable.meteorgrey_small),
                 };
 
+                iconoNaveVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.playerlife1_blue);
+                xVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeralx);
+                numeroVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral3);
             }
         }
     }
@@ -162,6 +167,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 }
             }
             this.paint.reset();
+            canvas.drawBitmap(this.iconoNaveVida, (float) (this.anchoPantalla * 0.02), (float) (this.altoPantalla * 0.02), null);
+            canvas.drawBitmap(this.xVida, (float) (this.anchoPantalla * 0.05), (float) (this.altoPantalla * 0.025), null);
+            canvas.drawBitmap(this.numeroVida, (float) (this.anchoPantalla * 0.065), (float) (this.altoPantalla * 0.025), null);
         } catch (Exception ignored) {
         }
     }
@@ -174,6 +182,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         if (this.fondos[1].posicion.x < -this.fondos[1].imagen.getWidth())
             this.fondos[1].posicion.x = this.fondos[0].posicion.x + this.fondos[1].imagen.getWidth();
         if (this.ajustes.controlJuego.equals("tactil")) {
+            //TODO Mejorar movimiento con pantalla táctil
             if (this.posiciones.entrySet().iterator().hasNext()) {
                 PointF punto = this.posiciones.entrySet().iterator().next().getValue();
                 if (punto.y < (this.nave.posicion.y + this.nave.imagen.getHeight() / 2) && this.nave.posicion.y >= 0) {
@@ -188,7 +197,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             } else if (this.nave.posicion.y > this.altoPantalla - this.nave.imagen.getHeight()) {
                 this.nave.posicion.y = this.altoPantalla - this.nave.imagen.getHeight();
             } else {
-                this.nave.mover((int) ((this.orientacion[2] - this.valorOrientacionReferencia) * -13));
+                this.nave.mover((int) ((this.orientacion[2] - this.valorOrientacionReferencia) * -17));
             }
         }
         for (int i = meteoritos.size() - 1; i >= 0; i--) {
@@ -200,9 +209,19 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             for (RectF rectF : this.nave.rectangulos) {
                 for (RectF rectF1 : meteorito.rectangulos) {
                     if (rectF.intersect(rectF1)) {
-                        this.meteoritos.remove(i);
-                        if (--this.vidas == 0) {
+                        if (--this.nave.vidas == 0) {
+                            this.numeroVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral0);
                             this.funcionando = false;
+                        } else {
+                            this.meteoritos.remove(i);
+                            switch (this.nave.vidas){
+                                case 2:
+                                    this.numeroVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral2);
+                                    break;
+                                case 1:
+                                    this.numeroVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral1);
+                                    break;
+                            }
                         }
                         break;
                     }

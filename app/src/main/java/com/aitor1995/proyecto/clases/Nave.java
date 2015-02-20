@@ -1,10 +1,12 @@
 package com.aitor1995.proyecto.clases;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.RectF;
 
 public class Nave extends Imagen {
     public RectF[] rectangulos = new RectF[2];
+    public int vidas = 3;
 
     public Nave(Bitmap imagen, float x, float y) {
         super(imagen, x, y);
