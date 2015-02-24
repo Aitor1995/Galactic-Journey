@@ -46,7 +46,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Nave nave;
     private Hilo hilo;
     final private LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
-    private ArrayList<Meteorito> meteritos = new ArrayList<>();
     private Random random = new Random();
     private float[] gravity;
     private float[] geomagnetic;
@@ -175,31 +174,17 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     private void actualizarFisica() {
-        this.fondos[0].mover(3);
-        this.fondos[1].mover(3);
-        if (this.fondos[0].posicion.x < -this.fondos[0].imagen.getWidth())
-            this.fondos[0].posicion.x = this.fondos[1].posicion.x + this.fondos[0].imagen.getWidth();
-        if (this.fondos[1].posicion.x < -this.fondos[1].imagen.getWidth())
-            this.fondos[1].posicion.x = this.fondos[0].posicion.x + this.fondos[1].imagen.getWidth();
+        this.moverFondos();
         if (this.ajustes.controlJuego.equals("tactil")) {
-            //TODO Mejorar movimiento con pantalla táctil
-            if (this.posiciones.entrySet().iterator().hasNext()) {
-                PointF punto = this.posiciones.entrySet().iterator().next().getValue();
-                if (punto.y < (this.nave.posicion.y + this.nave.imagen.getHeight() / 2) && this.nave.posicion.y >= 0) {
-                    this.nave.mover(-6);
-                } else if (punto.y > (this.nave.posicion.y + this.nave.imagen.getHeight() / 2) && (this.nave.posicion.y + this.nave.imagen.getHeight()) <= this.altoPantalla) {
-                    this.nave.mover(6);
-                }
-            }
+            this.movimientoTactil();
         } else {
-            if (this.nave.posicion.y < 0 && this.nave.posicion.y <= this.altoPantalla - this.nave.imagen.getHeight()) {
-                this.nave.posicion.y = 0;
-            } else if (this.nave.posicion.y > this.altoPantalla - this.nave.imagen.getHeight()) {
-                this.nave.posicion.y = this.altoPantalla - this.nave.imagen.getHeight();
-            } else {
-                this.nave.mover((int) ((this.orientacion[2] - this.valorOrientacionReferencia) * -17));
-            }
+            this.movimientoGiroscopio();
         }
+        this.moverMeteoritos();
+        this.crearMeteoritos();
+    }
+
+    private void moverMeteoritos() {
         for (int i = meteoritos.size() - 1; i >= 0; i--) {
             Meteorito meteorito = meteoritos.get(i);
             meteorito.mover();
@@ -214,7 +199,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                             this.funcionando = false;
                         } else {
                             this.meteoritos.remove(i);
-                            switch (this.nave.vidas){
+                            switch (this.nave.vidas) {
                                 case 2:
                                     this.numeroVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral2);
                                     break;
@@ -228,18 +213,72 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 }
             }
         }
+    }
+
+    private void crearMeteoritos() {
         //TODO Mejorar la aparicion de meteoritos
-        if (this.random.nextInt(12) == 0) {
+        if (this.random.nextInt(10) == 0) {
             int numero = this.random.nextInt(6);
-            Meteorito meteorito = new Meteorito(this.bitmapsMeteoritos[numero], //imagen
-                    this.anchoPantalla, //posicion x
-                    (this.random.nextFloat() * this.altoPantalla), //posicion y
-                    Math.abs((numero % 3) - 3), //tamaño
-                    this.random.nextInt(10) + 7, //velocidad
-                    this.random.nextInt(40) - 20 //angulo
-            );
+            float posicionY = this.random.nextFloat() * this.altoPantalla;
+            Meteorito meteorito;
+            if (posicionY < this.altoPantalla * 0.3) {
+                meteorito = new Meteorito(this.bitmapsMeteoritos[numero], //imagen
+                        this.anchoPantalla, //posicion x
+                        posicionY, //posicion y
+                        Math.abs((numero % 3) - 3), //tamaño
+                        this.random.nextInt(10) + 7, //velocidad
+                        this.random.nextInt(20) - 20 //angulo
+                );
+            } else if (posicionY > this.altoPantalla * 0.7) {
+                meteorito = new Meteorito(this.bitmapsMeteoritos[numero], //imagen
+                        this.anchoPantalla, //posicion x
+                        posicionY, //posicion y
+                        Math.abs((numero % 3) - 3), //tamaño
+                        this.random.nextInt(10) + 7, //velocidad
+                        this.random.nextInt(20) //angulo
+                );
+            } else {
+                meteorito = new Meteorito(this.bitmapsMeteoritos[numero], //imagen
+                        this.anchoPantalla, //posicion x
+                        posicionY, //posicion y
+                        Math.abs((numero % 3) - 3), //tamaño
+                        this.random.nextInt(10) + 7, //velocidad
+                        this.random.nextInt(40) - 20 //angulo
+                );
+            }
             this.meteoritos.add(meteorito);
         }
+    }
+
+    private void movimientoGiroscopio() {
+        if (this.nave.posicion.y < 0 && this.nave.posicion.y <= this.altoPantalla - this.nave.imagen.getHeight()) {
+            this.nave.posicion.y = 0;
+        } else if (this.nave.posicion.y > this.altoPantalla - this.nave.imagen.getHeight()) {
+            this.nave.posicion.y = this.altoPantalla - this.nave.imagen.getHeight();
+        } else {
+            this.nave.mover((int) ((this.orientacion[2] - this.valorOrientacionReferencia) * -17));
+        }
+    }
+
+    private void movimientoTactil() {
+        //TODO Mejorar movimiento con pantalla táctil
+        if (this.posiciones.entrySet().iterator().hasNext()) {
+            PointF punto = this.posiciones.entrySet().iterator().next().getValue();
+            if (punto.y < (this.nave.posicion.y + this.nave.imagen.getHeight() / 2) && this.nave.posicion.y >= 0) {
+                this.nave.mover(-6);
+            } else if (punto.y > (this.nave.posicion.y + this.nave.imagen.getHeight() / 2) && (this.nave.posicion.y + this.nave.imagen.getHeight()) <= this.altoPantalla) {
+                this.nave.mover(6);
+            }
+        }
+    }
+
+    private void moverFondos() {
+        this.fondos[0].mover(3);
+        this.fondos[1].mover(3);
+        if (this.fondos[0].posicion.x < -this.fondos[0].imagen.getWidth())
+            this.fondos[0].posicion.x = this.fondos[1].posicion.x + this.fondos[0].imagen.getWidth();
+        if (this.fondos[1].posicion.x < -this.fondos[1].imagen.getWidth())
+            this.fondos[1].posicion.x = this.fondos[0].posicion.x + this.fondos[1].imagen.getWidth();
     }
 
     public Hilo getHilo() {
