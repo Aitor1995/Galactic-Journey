@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -43,6 +44,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Bitmap xVida;
     private Bitmap numeroVida;
     private ArrayList<Meteorito> meteoritos = new ArrayList<>();
+    private double puntuacion = 0;
     private Nave nave;
     private Hilo hilo;
     final private LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
@@ -98,7 +100,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 tiempoDormido = tiempoReferencia - System.nanoTime();
                 if (tiempoDormido > 0) {
                     try {
-
                         Thread.sleep(tiempoDormido / 1000000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -169,6 +170,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             canvas.drawBitmap(this.iconoNaveVida, (float) (this.anchoPantalla * 0.02), (float) (this.altoPantalla * 0.02), null);
             canvas.drawBitmap(this.xVida, (float) (this.anchoPantalla * 0.05), (float) (this.altoPantalla * 0.025), null);
             canvas.drawBitmap(this.numeroVida, (float) (this.anchoPantalla * 0.065), (float) (this.altoPantalla * 0.025), null);
+            // Mostrar puntuación
         } catch (Exception ignored) {
         }
     }
@@ -182,6 +184,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         }
         this.moverMeteoritos();
         this.crearMeteoritos();
+        this.puntuacion += 0.1;
     }
 
     private void moverMeteoritos() {
