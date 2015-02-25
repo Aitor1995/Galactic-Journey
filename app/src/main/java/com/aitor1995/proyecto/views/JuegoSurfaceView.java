@@ -15,6 +15,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -40,6 +41,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     public SensorManager sensorManager;
     private Fondo[] fondos;
     private Bitmap[] bitmapsMeteoritos;
+    private Bitmap[] bitmapsNumeros;
     private Bitmap iconoNaveVida;
     private Bitmap xVida;
     private Bitmap numeroVida;
@@ -135,9 +137,22 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         BitmapFactory.decodeResource(context.getResources(), R.drawable.meteorgrey_small),
                 };
 
+                bitmapsNumeros = new Bitmap[]{
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral0),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral1),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral2),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral3),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral4),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral5),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral6),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral7),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral8),
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral9),
+                };
+
                 iconoNaveVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.playerlife1_blue);
                 xVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeralx);
-                numeroVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral3);
+                numeroVida = bitmapsNumeros[3];
             }
         }
     }
@@ -170,9 +185,58 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             canvas.drawBitmap(this.iconoNaveVida, (float) (this.anchoPantalla * 0.02), (float) (this.altoPantalla * 0.02), null);
             canvas.drawBitmap(this.xVida, (float) (this.anchoPantalla * 0.05), (float) (this.altoPantalla * 0.025), null);
             canvas.drawBitmap(this.numeroVida, (float) (this.anchoPantalla * 0.065), (float) (this.altoPantalla * 0.025), null);
-            // Mostrar puntuación
+            ArrayList<Bitmap> numeros = this.crearImagenPuntuacion((int) puntuacion);
+            float posicion = 0.95F;
+            for (int i = 0; i < numeros.size(); i++) {
+                Bitmap numero = numeros.get(i);
+                canvas.drawBitmap(numero, this.anchoPantalla * posicion, (float) (this.altoPantalla * 0.025), null);
+                posicion -= 0.02;
+            }
         } catch (Exception ignored) {
         }
+    }
+
+    private ArrayList<Bitmap> crearImagenPuntuacion(int puntuacion) {
+        ArrayList<Bitmap> numeros = new ArrayList<>();
+        while (puntuacion > 0) {
+            switch (puntuacion % 10) {
+                case 0:
+                    numeros.add(bitmapsNumeros[0]);
+                    break;
+                case 1:
+                    numeros.add(bitmapsNumeros[1]);
+                    break;
+                case 2:
+                    numeros.add(bitmapsNumeros[2]);
+                    break;
+                case 3:
+                    numeros.add(bitmapsNumeros[3]);
+                    break;
+                case 4:
+                    numeros.add(bitmapsNumeros[4]);
+                    break;
+                case 5:
+                    numeros.add(bitmapsNumeros[5]);
+                    break;
+                case 6:
+                    numeros.add(bitmapsNumeros[6]);
+                    break;
+                case 7:
+                    numeros.add(bitmapsNumeros[7]);
+                    break;
+                case 8:
+                    numeros.add(bitmapsNumeros[8]);
+                    break;
+                case 9:
+                    numeros.add(bitmapsNumeros[9]);
+                    break;
+            }
+            puntuacion = puntuacion / 10;
+        }
+        if (numeros.size() == 0) {
+            numeros.add(bitmapsNumeros[0]);
+        }
+        return numeros;
     }
 
     private void actualizarFisica() {
@@ -198,16 +262,17 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 for (RectF rectF1 : meteorito.rectangulos) {
                     if (rectF.intersect(rectF1)) {
                         if (--this.nave.vidas == 0) {
-                            this.numeroVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral0);
+                            this.numeroVida = bitmapsNumeros[0];
                             this.funcionando = false;
+                            puntuacion -= 0.1;
                         } else {
                             this.meteoritos.remove(i);
                             switch (this.nave.vidas) {
                                 case 2:
-                                    this.numeroVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral2);
+                                    this.numeroVida = bitmapsNumeros[2];
                                     break;
                                 case 1:
-                                    this.numeroVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeral1);
+                                    this.numeroVida = bitmapsNumeros[1];
                                     break;
                             }
                         }
@@ -216,11 +281,12 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 }
             }
         }
+        puntuacion += 0.1;
     }
 
     private void crearMeteoritos() {
         //TODO Mejorar la aparicion de meteoritos
-        if (this.random.nextInt(10) == 0) {
+        if (this.random.nextInt(13) == 0) {
             int numero = this.random.nextInt(6);
             float posicionY = this.random.nextFloat() * this.altoPantalla;
             Meteorito meteorito;
