@@ -1,6 +1,9 @@
 package com.aitor1995.proyecto.views;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,6 +17,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,6 +29,7 @@ import com.aitor1995.proyecto.R;
 import com.aitor1995.proyecto.clases.Fondo;
 import com.aitor1995.proyecto.clases.Meteorito;
 import com.aitor1995.proyecto.clases.Nave;
+import com.aitor1995.proyecto.sqlite.RecordsSQLiteHelper;
 import com.aitor1995.proyecto.utils.AjustesApp;
 
 import java.util.ArrayList;
@@ -246,12 +251,12 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         } else {
             this.movimientoGiroscopio();
         }
-        this.moverMeteoritos();
+        this.moverMeteoritosYColisiones();
         this.crearMeteoritos();
         this.puntuacion += 0.1;
     }
 
-    private void moverMeteoritos() {
+    private void moverMeteoritosYColisiones() {
         for (int i = meteoritos.size() - 1; i >= 0; i--) {
             Meteorito meteorito = meteoritos.get(i);
             meteorito.mover();
@@ -264,7 +269,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         if (--this.nave.vidas == 0) {
                             this.numeroVida = bitmapsNumeros[0];
                             this.funcionando = false;
-                            puntuacion -= 0.1;
                         } else {
                             this.meteoritos.remove(i);
                             switch (this.nave.vidas) {
