@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.aitor1995.proyecto.sqlite.RecordsContract.RecordEntry;
 
 public class RecordsSQLiteHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "Proyecto.db";
+    public static final String DATABASE_NAME = "Records.db";
     public static final int DATABASE_VERSION = 1;
 
     public RecordsSQLiteHelper(Context context) {
@@ -27,10 +27,5 @@ public class RecordsSQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //TODO Posible actualización futura
-    }
-
-    @Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        this.onUpgrade(db, oldVersion, newVersion);
     }
 }

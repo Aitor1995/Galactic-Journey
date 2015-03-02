@@ -54,6 +54,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private double puntuacion = 0;
     private Nave nave;
     private Hilo hilo;
+    private boolean juegoTerminado = false;
     final private LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
     private Random random = new Random();
     private float[] gravity;
@@ -197,6 +198,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 canvas.drawBitmap(numero, this.anchoPantalla * posicion, (float) (this.altoPantalla * 0.025), null);
                 posicion -= 0.02;
             }
+            if (this.juegoTerminado) {
+
+            }
         } catch (Exception ignored) {
         }
     }
@@ -245,15 +249,17 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     private void actualizarFisica() {
-        this.moverFondos();
-        if (this.ajustes.controlJuego.equals("tactil")) {
-            this.movimientoTactil();
-        } else {
-            this.movimientoGiroscopio();
+        if (!this.juegoTerminado) {
+            this.moverFondos();
+            if (this.ajustes.controlJuego.equals("tactil")) {
+                this.movimientoTactil();
+            } else {
+                this.movimientoGiroscopio();
+            }
+            this.moverMeteoritosYColisiones();
+            this.crearMeteoritos();
+            this.puntuacion += 0.1;
         }
-        this.moverMeteoritosYColisiones();
-        this.crearMeteoritos();
-        this.puntuacion += 0.1;
     }
 
     private void moverMeteoritosYColisiones() {
@@ -268,7 +274,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                     if (rectF.intersect(rectF1)) {
                         if (--this.nave.vidas == 0) {
                             this.numeroVida = bitmapsNumeros[0];
-                            this.funcionando = false;
+                            this.juegoTerminado = true;
                         } else {
                             this.meteoritos.remove(i);
                             switch (this.nave.vidas) {
