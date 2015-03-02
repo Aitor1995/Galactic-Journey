@@ -1,9 +1,6 @@
 package com.aitor1995.proyecto.views;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,24 +9,25 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
+import android.graphics.drawable.NinePatchDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.inputmethod.InputMethodManager;
 
 import com.aitor1995.proyecto.BuildConfig;
 import com.aitor1995.proyecto.R;
 import com.aitor1995.proyecto.clases.Fondo;
 import com.aitor1995.proyecto.clases.Meteorito;
 import com.aitor1995.proyecto.clases.Nave;
-import com.aitor1995.proyecto.sqlite.RecordsSQLiteHelper;
 import com.aitor1995.proyecto.utils.AjustesApp;
 
 import java.util.ArrayList;
@@ -42,6 +40,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private final SurfaceHolder surfaceHolder;
     private final Context context;
     private final AjustesApp ajustes;
+    private final float pixelsPuntuacion;
+    private final float pixelsBotones;
     public MediaPlayer mediaPlayer;
     public SensorManager sensorManager;
     private Fondo[] fondos;
@@ -50,6 +50,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Bitmap iconoNaveVida;
     private Bitmap xVida;
     private Bitmap numeroVida;
+    private NinePatchDrawable panelResultados;
+    private NinePatchDrawable boton;
     private ArrayList<Meteorito> meteoritos = new ArrayList<>();
     private double puntuacion = 0;
     private Nave nave;
@@ -70,6 +72,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     final int TPS = 1000000000;
     final int FRAGMENTO_TEMPORAL = TPS / FPS;
     long tiempoReferencia = System.nanoTime();
+    private Typeface typeface;
 
     public JuegoSurfaceView(Context context) {
         super(context);
@@ -85,6 +88,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.mediaPlayer.start();
         }
         this.hilo = new Hilo();
+        this.pixelsPuntuacion = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
+        this.pixelsBotones = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
     }
 
     private class Hilo extends Thread {
@@ -191,7 +196,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             canvas.drawBitmap(this.iconoNaveVida, (float) (this.anchoPantalla * 0.02), (float) (this.altoPantalla * 0.02), null);
             canvas.drawBitmap(this.xVida, (float) (this.anchoPantalla * 0.05), (float) (this.altoPantalla * 0.025), null);
             canvas.drawBitmap(this.numeroVida, (float) (this.anchoPantalla * 0.065), (float) (this.altoPantalla * 0.025), null);
-            ArrayList<Bitmap> numeros = this.crearImagenPuntuacion((int) puntuacion);
+            ArrayList<Bitmap> numeros = this.crearImagenesPuntuacion((int) puntuacion);
             float posicion = 0.95F;
             for (int i = 0; i < numeros.size(); i++) {
                 Bitmap numero = numeros.get(i);
@@ -199,13 +204,24 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 posicion -= 0.02;
             }
             if (this.juegoTerminado) {
-
+                panelResultados.draw(canvas);
+                String texto = (int) this.puntuacion + "";
+                this.paint.setTypeface(this.typeface);
+                this.paint.setAntiAlias(true);
+                this.paint.setTextSize(this.pixelsPuntuacion);
+                Rect rect = new Rect();
+                this.paint.getTextBounds(texto, 0, texto.length(), rect);
+                canvas.drawText(texto, (float) ((this.anchoPantalla - rect.width()) / 2), (float) (this.altoPantalla * 0.35), this.paint);
+                texto = "Guardar";
+                this.paint.setTextSize(this.pixelsBotones);
+                this.boton.setBounds((int) (this.anchoPantalla * 0.2), (int) (this.altoPantalla * 0.2), (int) (this.anchoPantalla * 0.8), (int) (this.altoPantalla * 0.8));
+                this.paint.reset();
             }
         } catch (Exception ignored) {
         }
     }
 
-    private ArrayList<Bitmap> crearImagenPuntuacion(int puntuacion) {
+    private ArrayList<Bitmap> crearImagenesPuntuacion(int puntuacion) {
         ArrayList<Bitmap> numeros = new ArrayList<>();
         while (puntuacion > 0) {
             switch (puntuacion % 10) {
@@ -275,6 +291,12 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         if (--this.nave.vidas == 0) {
                             this.numeroVida = bitmapsNumeros[0];
                             this.juegoTerminado = true;
+                            this.panelResultados = (NinePatchDrawable) context.getResources().getDrawable(R.drawable.metalpanel_greencorner);
+                            this.panelResultados.setBounds((int) (this.anchoPantalla * 0.2), (int) (this.altoPantalla * 0.2), (int) (this.anchoPantalla * 0.8), (int) (this.altoPantalla * 0.8));
+                            this.typeface = Typeface.createFromAsset(context.getAssets(), "fuente.otf");
+                            this.boton = (NinePatchDrawable) this.context.getResources().getDrawable(R.drawable.boton);
+                            InputMethodManager inputMethodManager = (InputMethodManager) this.context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                         } else {
                             this.meteoritos.remove(i);
                             switch (this.nave.vidas) {
