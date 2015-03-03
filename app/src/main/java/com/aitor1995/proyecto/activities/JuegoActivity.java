@@ -18,6 +18,9 @@ public class JuegoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         this.ajustes = AjustesApp.getInstance(this);
         this.juegoSurfaceView = new JuegoSurfaceView(this);
+        this.juegoSurfaceView.setKeepScreenOn(true);
+        this.juegoSurfaceView.setFocusable(true);
+        this.juegoSurfaceView.setFocusableInTouchMode(true);
         setContentView(juegoSurfaceView);
     }
 
@@ -30,6 +33,9 @@ public class JuegoActivity extends BaseActivity {
         }
         if (this.ajustes.controlJuego.equals("giroscopo")) {
             this.juegoSurfaceView.sensorManager.unregisterListener(this.juegoSurfaceView);
+        }
+        if (this.juegoSurfaceView.inputMethodManager != null) {
+            this.juegoSurfaceView.inputMethodManager.hideSoftInputFromWindow(this.juegoSurfaceView.getWindowToken(), 0);
         }
     }
 

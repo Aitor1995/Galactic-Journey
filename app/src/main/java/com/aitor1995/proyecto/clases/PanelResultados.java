@@ -1,5 +1,6 @@
 package com.aitor1995.proyecto.clases;
 
+import android.graphics.Rect;
 import android.graphics.drawable.NinePatchDrawable;
 
 public class PanelResultados {
@@ -7,5 +8,10 @@ public class PanelResultados {
 
     public PanelResultados(NinePatchDrawable ninePatchDrawable) {
         this.imagen = ninePatchDrawable;
+    }
+
+    public PanelResultados(NinePatchDrawable ninePatchDrawable, Rect posicion) {
+        this(ninePatchDrawable);
+        this.imagen.setBounds(posicion);
     }
 }
