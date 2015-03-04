@@ -16,6 +16,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.TypedValue;
@@ -55,6 +56,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Bitmap numeroVida;
     private PanelResultados panelResultados;
     private String nombre = "";
+    private RectF rectNombre;
     private NinePatchDrawable boton;
     private ArrayList<Meteorito> meteoritos = new ArrayList<>();
     private double puntuacion = 0;
@@ -78,6 +80,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     long tiempoReferencia = System.nanoTime();
     private Typeface typeface;
     public InputMethodManager inputMethodManager;
+    private Vibrator vibrator;
+    private boolean tecladoMostrado = false;
 
     public JuegoSurfaceView(Context context) {
         super(context);
@@ -93,7 +97,13 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         }
         this.hilo = new Hilo();
         this.pixelsPuntuacion = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
-        this.pixelsBotones = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
+        this.pixelsBotones = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 22, getResources().getDisplayMetrics());
+    }
+
+    private void vibrate(int milisegundos){
+        if(this.vibrator==null)
+            this.vibrator = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
+        this.vibrator.vibrate(milisegundos);
     }
 
     private class Hilo extends Thread {
@@ -218,7 +228,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 canvas.drawText(texto, (float) ((this.anchoPantalla - rect.width()) / 2), (float) (this.altoPantalla * 0.35), this.paint);
                 this.paint.setTextSize(this.pixelsBotones);
                 this.paint.getTextBounds("Escribe tu nombre: " + nombre, 0, ("Escribe tu nombre: " + nombre).length(), rect);
-                canvas.drawText("Escribe tu nombre: " + nombre, (float) ((this.anchoPantalla - rect.width()) / 2), (float) (this.altoPantalla * 0.5), this.paint);
+                PointF pointF = new PointF((float) ((this.anchoPantalla - rect.width()) / 2), (float) (this.altoPantalla * 0.45));
+                canvas.drawText("Escribe tu nombre: " + nombre, pointF.x, pointF.y, this.paint);
+                this.rectNombre = new RectF(pointF.x - 30, pointF.y - 30, pointF.x + rect.width() + 30, pointF.y + rect.height() + 30);
                 texto = "Guardar";
                 this.boton.setBounds((int) (this.anchoPantalla * 0.2), (int) (this.altoPantalla * 0.2), (int) (this.anchoPantalla * 0.8), (int) (this.altoPantalla * 0.8));
                 this.paint.reset();
@@ -281,6 +293,14 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.moverMeteoritosYColisiones();
             this.crearMeteoritos();
             this.puntuacion += 0.1;
+        } else {
+            if (this.posiciones.entrySet().iterator().hasNext()) {
+                PointF pointF = this.posiciones.entrySet().iterator().next().getValue();
+                if (this.rectNombre.contains((int) pointF.x, (int) pointF.y) && !this.tecladoMostrado) {
+                    this.tecladoMostrado = true;
+                    this.inputMethodManager.toggleSoftInputFromWindow(this.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+                }
+            }
         }
     }
 
@@ -289,15 +309,24 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         synchronized (this.surfaceHolder) {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 this.inputMethodManager.toggleSoftInputFromWindow(this.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+                this.tecladoMostrado = false;
             } else if (keyCode == KeyEvent.KEYCODE_DEL) {
-                this.nombre = this.nombre.substring(0, this.nombre.length() - 1);
+                if (this.nombre.length() > 0)
+                    this.nombre = this.nombre.substring(0, this.nombre.length() - 1);
             } else {
-                this.nombre += (char) event.getUnicodeChar();
-                Log.d(TAG, "Codigo tecla: " + keyCode);
-                Log.d(TAG, "KeyEvent: " + event);
+                if (this.nombre.length() <= 15)
+                    this.nombre += (char) event.getUnicodeChar();
             }
             return super.onKeyUp(keyCode, event);
         }
+    }
+
+    @Override
+    public boolean dispatchKeyEventPreIme(@NonNull KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            this.tecladoMostrado = false;
+        }
+        return super.dispatchKeyEventPreIme(event);
     }
 
     private void moverMeteoritosYColisiones() {
@@ -332,6 +361,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                                     break;
                             }
                         }
+                        this.vibrate(300);
                         break;
                     }
                 }
