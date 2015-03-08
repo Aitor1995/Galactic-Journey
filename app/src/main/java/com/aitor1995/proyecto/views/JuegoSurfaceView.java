@@ -18,7 +18,6 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -28,6 +27,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.aitor1995.proyecto.BuildConfig;
 import com.aitor1995.proyecto.R;
+import com.aitor1995.proyecto.clases.Boton;
 import com.aitor1995.proyecto.clases.Fondo;
 import com.aitor1995.proyecto.clases.Meteorito;
 import com.aitor1995.proyecto.clases.Nave;
@@ -45,7 +45,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private final Context context;
     private final AjustesApp ajustes;
     private final float pixelsPuntuacion;
-    private final float pixelsBotones;
+    private final float pixelsPeticionNombre;
     public MediaPlayer mediaPlayer;
     public SensorManager sensorManager;
     private Fondo[] fondos;
@@ -82,6 +82,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     public InputMethodManager inputMethodManager;
     private Vibrator vibrator;
     private boolean tecladoMostrado = false;
+    private Boton botonAceptar;
+    private Boton botonCompartir;
 
     public JuegoSurfaceView(Context context) {
         super(context);
@@ -97,12 +99,12 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         }
         this.hilo = new Hilo();
         this.pixelsPuntuacion = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
-        this.pixelsBotones = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 22, getResources().getDisplayMetrics());
+        this.pixelsPeticionNombre = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 22, getResources().getDisplayMetrics());
     }
 
-    private void vibrate(int milisegundos){
-        if(this.vibrator==null)
-            this.vibrator = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
+    private void vibrate(int milisegundos) {
+        if (this.vibrator == null)
+            this.vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         this.vibrator.vibrate(milisegundos);
     }
 
@@ -219,21 +221,23 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             }
             if (this.juegoTerminado) {
                 this.panelResultados.imagen.draw(canvas);
-                String texto = (int) this.puntuacion + "";
+                String punct = (int) this.puntuacion + "";
                 this.paint.setTypeface(this.typeface);
                 this.paint.setAntiAlias(true);
                 this.paint.setTextSize(this.pixelsPuntuacion);
                 Rect rect = new Rect();
-                this.paint.getTextBounds(texto, 0, texto.length(), rect);
-                canvas.drawText(texto, (float) ((this.anchoPantalla - rect.width()) / 2), (float) (this.altoPantalla * 0.35), this.paint);
-                this.paint.setTextSize(this.pixelsBotones);
+                this.paint.getTextBounds(punct, 0, punct.length(), rect);
+                canvas.drawText(punct, (float) ((this.anchoPantalla - rect.width()) / 2), (float) (this.altoPantalla * 0.35), this.paint);
+
+                this.paint.setTextSize(this.pixelsPeticionNombre);
                 this.paint.getTextBounds("Escribe tu nombre: " + nombre, 0, ("Escribe tu nombre: " + nombre).length(), rect);
                 PointF pointF = new PointF((float) ((this.anchoPantalla - rect.width()) / 2), (float) (this.altoPantalla * 0.45));
                 canvas.drawText("Escribe tu nombre: " + nombre, pointF.x, pointF.y, this.paint);
                 this.rectNombre = new RectF(pointF.x - 30, pointF.y - 30, pointF.x + rect.width() + 30, pointF.y + rect.height() + 30);
-                texto = "Guardar";
-                this.boton.setBounds((int) (this.anchoPantalla * 0.2), (int) (this.altoPantalla * 0.2), (int) (this.anchoPantalla * 0.8), (int) (this.altoPantalla * 0.8));
                 this.paint.reset();
+
+                this.botonAceptar.dibujar(canvas);
+                this.botonCompartir.dibujar(canvas);
             }
         } catch (Exception ignored) {
         }
@@ -314,7 +318,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 if (this.nombre.length() > 0)
                     this.nombre = this.nombre.substring(0, this.nombre.length() - 1);
             } else {
-                if (this.nombre.length() <= 15)
+                if (this.nombre.length() <= 10)
                     this.nombre += (char) event.getUnicodeChar();
             }
             return super.onKeyUp(keyCode, event);
@@ -346,8 +350,22 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                                     (NinePatchDrawable) context.getResources().getDrawable(R.drawable.metalpanel_greencorner),
                                     new Rect((int) (this.anchoPantalla * 0.2), (int) (this.altoPantalla * 0.2), (int) (this.anchoPantalla * 0.8), (int) (this.altoPantalla * 0.8))
                             );
+                            NinePatchDrawable ninePatchDrawable = (NinePatchDrawable) this.context.getResources().getDrawable(R.drawable.boton);
+                            this.botonAceptar = new Boton(
+                                    ninePatchDrawable,
+                                    "Aceptar",
+                                    this.typeface,
+                                    this.anchoPantalla,
+                                    (int) (this.altoPantalla * 0.5)
+                            );
+                            this.botonCompartir = new Boton(
+                                    ninePatchDrawable,
+                                    "Compartir",
+                                    this.typeface,
+                                    this.anchoPantalla,
+                                    (int) (this.altoPantalla * 0.65)
+                            );
                             this.typeface = Typeface.createFromAsset(context.getAssets(), "fuente.otf");
-                            this.boton = (NinePatchDrawable) this.context.getResources().getDrawable(R.drawable.boton);
                             this.inputMethodManager = (InputMethodManager) this.context.getSystemService(Context.INPUT_METHOD_SERVICE);
                             this.inputMethodManager.toggleSoftInputFromWindow(this.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
                         } else {
