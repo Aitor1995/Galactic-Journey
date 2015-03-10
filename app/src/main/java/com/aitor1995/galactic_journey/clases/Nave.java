@@ -1,7 +1,6 @@
-package com.aitor1995.proyecto.clases;
+package com.aitor1995.galactic_journey.clases;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.RectF;
 
 public class Nave extends Imagen {

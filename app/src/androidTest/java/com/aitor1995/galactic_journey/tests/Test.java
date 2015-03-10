@@ -1,4 +1,4 @@
-package com.aitor1995.proyecto.tests;
+package com.aitor1995.galactic_journey.tests;
 
 import android.test.AndroidTestCase;
 

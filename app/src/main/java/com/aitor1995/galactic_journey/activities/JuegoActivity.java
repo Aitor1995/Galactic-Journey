@@ -1,12 +1,12 @@
-package com.aitor1995.proyecto.activities;
+package com.aitor1995.galactic_journey.activities;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
-import com.aitor1995.proyecto.utils.AjustesApp;
-import com.aitor1995.proyecto.views.JuegoSurfaceView;
+import com.aitor1995.galactic_journey.utils.AjustesApp;
+import com.aitor1995.galactic_journey.views.JuegoSurfaceView;
 
 public class JuegoActivity extends BaseActivity {
     private JuegoSurfaceView juegoSurfaceView;

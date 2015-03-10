@@ -1,4 +1,4 @@
-package com.aitor1995.proyecto.sqlite;
+package com.aitor1995.galactic_journey.sqlite;
 
 import android.provider.BaseColumns;
 

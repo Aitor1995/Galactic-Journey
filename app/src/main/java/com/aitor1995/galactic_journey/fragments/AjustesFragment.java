@@ -1,10 +1,10 @@
-package com.aitor1995.proyecto.fragments;
+package com.aitor1995.galactic_journey.fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
-import com.aitor1995.proyecto.R;
-import com.aitor1995.proyecto.utils.AjustesApp;
+import com.aitor1995.galactic_journey.R;
+import com.aitor1995.galactic_journey.utils.AjustesApp;
 
 public class AjustesFragment extends PreferenceFragment {
 

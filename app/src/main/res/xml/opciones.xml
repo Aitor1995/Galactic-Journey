@@ -18,7 +18,7 @@
             android:summaryOff="@string/pref_musica_summary_off"
             android:summaryOn="@string/pref_musica_summary_on"
             android:title="@string/pref_musica_titulo" />
-        <com.aitor1995.proyecto.preferences.SeekPreference
+        <com.aitor1995.galactic_journey.preferences.SeekPreference
             android:defaultValue="100"
             android:dependency="@string/pref_musica"
             android:key="@string/pref_valor_volumen"

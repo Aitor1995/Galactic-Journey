@@ -1,13 +1,13 @@
-package com.aitor1995.proyecto.activities;
+package com.aitor1995.galactic_journey.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
-import com.aitor1995.proyecto.R;
-import com.aitor1995.proyecto.fragments.AjustesFragment;
-import com.aitor1995.proyecto.fragments.MainFragment;
+import com.aitor1995.galactic_journey.R;
+import com.aitor1995.galactic_journey.fragments.AjustesFragment;
+import com.aitor1995.galactic_journey.fragments.MainFragment;
 
 
 public class MainActivity extends ActionBarActivity {

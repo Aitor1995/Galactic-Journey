@@ -1,4 +1,4 @@
-package com.aitor1995.proyecto.preferences;
+package com.aitor1995.galactic_journey.preferences;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.SeekBar;
 
-import com.aitor1995.proyecto.R;
+import com.aitor1995.galactic_journey.R;
 
 public class SeekPreference extends DialogPreference {
 

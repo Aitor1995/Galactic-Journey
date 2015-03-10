@@ -1,10 +1,10 @@
-package com.aitor1995.proyecto.utils;
+package com.aitor1995.galactic_journey.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.aitor1995.proyecto.R;
+import com.aitor1995.galactic_journey.R;
 
 public class AjustesApp {
     public static AjustesApp ajustes;

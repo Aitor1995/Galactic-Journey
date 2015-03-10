@@ -1,4 +1,4 @@
-package com.aitor1995.proyecto.fragments;
+package com.aitor1995.galactic_journey.fragments;
 
 import android.app.Fragment;
 import android.graphics.Typeface;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.aitor1995.proyecto.R;
+import com.aitor1995.galactic_journey.R;
 
 public class MainFragment extends Fragment {
 

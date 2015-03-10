@@ -1,4 +1,4 @@
-package com.aitor1995.proyecto.activities;
+package com.aitor1995.galactic_journey.activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;

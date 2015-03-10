@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Proyecto</string>
+    <string name="app_name" translatable="false">Galactic Journey</string>
     <!-- Menú principal -->
     <string name="jugar">Jugar</string>
     <string name="record">Récords</string>
     <string name="opciones">Opciones</string>
+    <!--Compartir-->
+    <string name="compartir">Compartir</string>
+    <string name="texto_compartir">He conseguido %d puntos en el juego #GalacticJourney</string>
     <!-- Preferencias -->
     <string name="pref_control_juego_titulo">Control del Juego</string>
     <string name="pref_control_juego">pref_control_juego</string>

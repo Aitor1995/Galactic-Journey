@@ -1,10 +1,10 @@
-package com.aitor1995.proyecto.sqlite;
+package com.aitor1995.galactic_journey.sqlite;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.aitor1995.proyecto.sqlite.RecordsContract.RecordEntry;
+import com.aitor1995.galactic_journey.sqlite.RecordsContract.RecordEntry;
 
 public class RecordsSQLiteHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Records.db";

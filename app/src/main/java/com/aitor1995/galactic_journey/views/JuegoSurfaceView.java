@@ -1,6 +1,7 @@
-package com.aitor1995.proyecto.views;
+package com.aitor1995.galactic_journey.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -25,14 +26,14 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.inputmethod.InputMethodManager;
 
-import com.aitor1995.proyecto.BuildConfig;
-import com.aitor1995.proyecto.R;
-import com.aitor1995.proyecto.clases.Boton;
-import com.aitor1995.proyecto.clases.Fondo;
-import com.aitor1995.proyecto.clases.Meteorito;
-import com.aitor1995.proyecto.clases.Nave;
-import com.aitor1995.proyecto.clases.PanelResultados;
-import com.aitor1995.proyecto.utils.AjustesApp;
+import com.aitor1995.galactic_journey.BuildConfig;
+import com.aitor1995.galactic_journey.R;
+import com.aitor1995.galactic_journey.clases.Boton;
+import com.aitor1995.galactic_journey.clases.Fondo;
+import com.aitor1995.galactic_journey.clases.Meteorito;
+import com.aitor1995.galactic_journey.clases.Nave;
+import com.aitor1995.galactic_journey.clases.PanelResultados;
+import com.aitor1995.galactic_journey.utils.AjustesApp;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -220,6 +221,10 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 posicion -= 0.02;
             }
             if (this.juegoTerminado) {
+                this.paint.setARGB(75, 0, 0, 255);
+                canvas.drawRect(0, 0, this.anchoPantalla, this.altoPantalla, this.paint);
+                this.paint.reset();
+
                 this.panelResultados.imagen.draw(canvas);
                 String punct = (int) this.puntuacion + "";
                 this.paint.setTypeface(this.typeface);
@@ -297,14 +302,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.moverMeteoritosYColisiones();
             this.crearMeteoritos();
             this.puntuacion += 0.1;
-        } else {
-            if (this.posiciones.entrySet().iterator().hasNext()) {
-                PointF pointF = this.posiciones.entrySet().iterator().next().getValue();
-                if (this.rectNombre.contains((int) pointF.x, (int) pointF.y) && !this.tecladoMostrado) {
-                    this.tecladoMostrado = true;
-                    this.inputMethodManager.toggleSoftInputFromWindow(this.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-                }
-            }
         }
     }
 
@@ -346,26 +343,27 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         if (--this.nave.vidas == 0) {
                             this.numeroVida = bitmapsNumeros[0];
                             this.juegoTerminado = true;
+                            this.typeface = Typeface.createFromAsset(context.getAssets(), "fuente.otf");
                             this.panelResultados = new PanelResultados(
                                     (NinePatchDrawable) context.getResources().getDrawable(R.drawable.metalpanel_greencorner),
                                     new Rect((int) (this.anchoPantalla * 0.2), (int) (this.altoPantalla * 0.2), (int) (this.anchoPantalla * 0.8), (int) (this.altoPantalla * 0.8))
                             );
-                            NinePatchDrawable ninePatchDrawable = (NinePatchDrawable) this.context.getResources().getDrawable(R.drawable.boton);
                             this.botonAceptar = new Boton(
-                                    ninePatchDrawable,
+                                    (NinePatchDrawable) this.context.getResources().getDrawable(R.drawable.boton),
                                     "Aceptar",
+                                    this.context,
                                     this.typeface,
                                     this.anchoPantalla,
                                     (int) (this.altoPantalla * 0.5)
                             );
                             this.botonCompartir = new Boton(
-                                    ninePatchDrawable,
+                                    (NinePatchDrawable) this.context.getResources().getDrawable(R.drawable.boton),
                                     "Compartir",
+                                    this.context,
                                     this.typeface,
                                     this.anchoPantalla,
                                     (int) (this.altoPantalla * 0.65)
                             );
-                            this.typeface = Typeface.createFromAsset(context.getAssets(), "fuente.otf");
                             this.inputMethodManager = (InputMethodManager) this.context.getSystemService(Context.INPUT_METHOD_SERVICE);
                             this.inputMethodManager.toggleSoftInputFromWindow(this.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
                         } else {
@@ -524,6 +522,19 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                     int pointerID = event.getPointerId(pointerIndex);
                     PointF posicion = new PointF(event.getX(pointerIndex), event.getY(pointerIndex));
                     posiciones.put(pointerID, posicion);
+                    if (this.juegoTerminado && event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        if (this.rectNombre.contains((int) posicion.x, (int) posicion.y) && !this.tecladoMostrado) {
+                            this.tecladoMostrado = true;
+                            this.inputMethodManager.toggleSoftInputFromWindow(this.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+                        }
+                        if (this.botonCompartir.isClickBoton((int) posicion.x, (int) posicion.y)) {
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_SEND);
+                            intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.texto_compartir, (int)this.puntuacion));
+                            intent.setType("text/plain");
+                            this.context.startActivity(Intent.createChooser(intent, getResources().getString(R.string.compartir)));
+                        }
+                    }
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_POINTER_UP:
