@@ -1,7 +1,9 @@
 package com.aitor1995.galactic_journey.views;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,6 +35,8 @@ import com.aitor1995.galactic_journey.clases.Fondo;
 import com.aitor1995.galactic_journey.clases.Meteorito;
 import com.aitor1995.galactic_journey.clases.Nave;
 import com.aitor1995.galactic_journey.clases.PanelResultados;
+import com.aitor1995.galactic_journey.sqlite.RecordsContract;
+import com.aitor1995.galactic_journey.sqlite.RecordsSQLiteHelper;
 import com.aitor1995.galactic_journey.utils.AjustesApp;
 
 import java.util.ArrayList;
@@ -530,9 +534,18 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         if (this.botonCompartir.isClickBoton((int) posicion.x, (int) posicion.y)) {
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_SEND);
-                            intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.texto_compartir, (int)this.puntuacion));
+                            intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.texto_compartir, (int) this.puntuacion));
                             intent.setType("text/plain");
                             this.context.startActivity(Intent.createChooser(intent, getResources().getString(R.string.compartir)));
+                        }
+                        if (this.botonAceptar.isClickBoton((int) posicion.x, (int) posicion.y)) {
+                            RecordsSQLiteHelper recordsSQLiteHelper = new RecordsSQLiteHelper(this.context);
+                            SQLiteDatabase db = recordsSQLiteHelper.getWritableDatabase();
+                            ContentValues values = new ContentValues();
+                            values.put(RecordsContract.RecordEntry.COLUMNA_NOMBRE_JUGADOR, this.nombre);
+                            values.put(RecordsContract.RecordEntry.COLUMNA_PUNTUACION, (int) this.puntuacion);
+                            db.insert(RecordsContract.RecordEntry.NOMBRE_TABLA, null, values);
+                            db.close();
                         }
                     }
                     break;
