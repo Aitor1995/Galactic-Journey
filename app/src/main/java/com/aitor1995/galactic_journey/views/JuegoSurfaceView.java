@@ -30,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.aitor1995.galactic_journey.BuildConfig;
 import com.aitor1995.galactic_journey.R;
+import com.aitor1995.galactic_journey.activities.RecordsActivity;
 import com.aitor1995.galactic_journey.clases.Boton;
 import com.aitor1995.galactic_journey.clases.Fondo;
 import com.aitor1995.galactic_journey.clases.Meteorito;
@@ -62,7 +63,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private PanelResultados panelResultados;
     private String nombre = "";
     private RectF rectNombre;
-    private NinePatchDrawable boton;
     private ArrayList<Meteorito> meteoritos = new ArrayList<>();
     private double puntuacion = 0;
     private Nave nave;
@@ -392,7 +392,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
     private void crearMeteoritos() {
         //TODO Mejorar la aparicion de meteoritos
-        if (this.random.nextInt(13) == 0) {
+        if (this.random.nextInt(10) == 0) {
             int numero = this.random.nextInt(6);
             float posicionY = this.random.nextFloat() * this.altoPantalla;
             Meteorito meteorito;
@@ -431,7 +431,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         } else if (this.nave.posicion.y > this.altoPantalla - this.nave.imagen.getHeight()) {
             this.nave.posicion.y = this.altoPantalla - this.nave.imagen.getHeight();
         } else {
-            this.nave.mover((int) ((this.orientacion[2] - this.valorOrientacionReferencia) * -17));
+            this.nave.mover((int) ((this.orientacion[2] - this.valorOrientacionReferencia) * -30));
         }
     }
 
@@ -539,13 +539,17 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                             this.context.startActivity(Intent.createChooser(intent, getResources().getString(R.string.compartir)));
                         }
                         if (this.botonAceptar.isClickBoton((int) posicion.x, (int) posicion.y)) {
-                            RecordsSQLiteHelper recordsSQLiteHelper = new RecordsSQLiteHelper(this.context);
-                            SQLiteDatabase db = recordsSQLiteHelper.getWritableDatabase();
-                            ContentValues values = new ContentValues();
-                            values.put(RecordsContract.RecordEntry.COLUMNA_NOMBRE_JUGADOR, this.nombre);
-                            values.put(RecordsContract.RecordEntry.COLUMNA_PUNTUACION, (int) this.puntuacion);
-                            db.insert(RecordsContract.RecordEntry.NOMBRE_TABLA, null, values);
-                            db.close();
+                            if (!this.nombre.trim().equals("")) {
+                                RecordsSQLiteHelper recordsSQLiteHelper = new RecordsSQLiteHelper(this.context);
+                                SQLiteDatabase db = recordsSQLiteHelper.getWritableDatabase();
+                                ContentValues values = new ContentValues();
+                                values.put(RecordsContract.RecordEntry.COLUMNA_NOMBRE_JUGADOR, this.nombre);
+                                values.put(RecordsContract.RecordEntry.COLUMNA_PUNTUACION, (int) this.puntuacion);
+                                db.insert(RecordsContract.RecordEntry.NOMBRE_TABLA, null, values);
+                                db.close();
+                            }
+                            Intent intent = new Intent(this.context, RecordsActivity.class);
+                            context.startActivity(intent);
                         }
                     }
                     break;

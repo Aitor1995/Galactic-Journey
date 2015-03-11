@@ -2,14 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_material_dark">
+    android:background="@drawable/background">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/jugar"
         android:id="@+id/botonJugar"
-        android:background="@drawable/boton"
+        android:background="@drawable/boton_selector"
         android:onClick="onJugarClick"
         android:textSize="25sp"
         android:layout_above="@+id/botonRecords"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="@string/record"
         android:id="@+id/botonRecords"
-        android:background="@drawable/boton"
+        android:background="@drawable/boton_selector"
         android:onClick="onRecordsClick"
         android:textSize="25sp"
         android:layout_above="@+id/buttonOpciones"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:text="@string/opciones"
         android:id="@+id/buttonOpciones"
-        android:background="@drawable/boton"
+        android:background="@drawable/boton_selector"
         android:onClick="onOpcionesClick"
         android:textSize="25sp"
         android:layout_alignParentBottom="true"
