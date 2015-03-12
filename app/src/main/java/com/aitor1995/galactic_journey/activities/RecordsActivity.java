@@ -8,7 +8,7 @@ import android.widget.ListView;
 
 import com.aitor1995.galactic_journey.R;
 import com.aitor1995.galactic_journey.adapters.AdapterRecords;
-import com.aitor1995.galactic_journey.sqlite.RecordsContract;
+import com.aitor1995.galactic_journey.sqlite.RecordsContract.RecordEntry;
 import com.aitor1995.galactic_journey.sqlite.RecordsSQLiteHelper;
 
 public class RecordsActivity extends BaseActivity {
@@ -19,9 +19,10 @@ public class RecordsActivity extends BaseActivity {
         setContentView(R.layout.activity_records);
         RecordsSQLiteHelper recordsSQLiteHelper = new RecordsSQLiteHelper(this);
         SQLiteDatabase db = recordsSQLiteHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + RecordsContract.RecordEntry.NOMBRE_TABLA, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + RecordEntry.NOMBRE_TABLA + " ORDER BY " + RecordEntry.COLUMNA_PUNTUACION + " DESC", null);
         ListView lvItems = (ListView) findViewById(R.id.listView);
         AdapterRecords adapterRecords = new AdapterRecords(this, cursor, Typeface.createFromAsset(getAssets(), "fuente.otf"));
         lvItems.setAdapter(adapterRecords);
     }
+
 }

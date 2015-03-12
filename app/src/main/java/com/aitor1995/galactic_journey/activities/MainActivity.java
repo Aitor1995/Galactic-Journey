@@ -24,14 +24,16 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
+        if (getFragmentManager().getBackStackEntryCount() > 0)
             getFragmentManager().popBackStack();
-        } else
+        else
             super.onBackPressed();
     }
 
     public void onJugarClick(View view) {
-        startActivity(new Intent(this, JuegoActivity.class));
+        Intent intent = new Intent(this, JuegoActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
     }
 
     public void onRecordsClick(View view) {
