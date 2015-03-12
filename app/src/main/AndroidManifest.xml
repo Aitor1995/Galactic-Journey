@@ -24,7 +24,8 @@
             android:screenOrientation="landscape" />
         <activity
             android:name="com.aitor1995.galactic_journey.activities.RecordsActivity"
-            android:label="@string/title_activity_records"/>
+            android:label="@string/title_activity_records"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>
