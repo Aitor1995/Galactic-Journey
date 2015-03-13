@@ -39,9 +39,20 @@
                 android:value="com.aitor1995.galactic_journey.activities.MainActivity" />
         </activity>
         <activity
+            android:name=".activities.ComprasActivity"
+            android:label="@string/title_activity_compras"
+            android:screenOrientation="landscape" />
+        <activity
             android:name="com.amazon.device.ads.AdActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
+        <receiver android:name="com.amazon.device.iap.ResponseReceiver">
+            <intent-filter>
+                <action
+                    android:name="com.amazon.inapp.purchasing.NOTIFY"
+                    android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

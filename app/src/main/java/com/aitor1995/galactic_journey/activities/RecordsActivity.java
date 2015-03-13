@@ -50,7 +50,8 @@ public class RecordsActivity extends BaseActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    adView.loadAd();
+                    if (funcionando)
+                        adView.loadAd();
                 }
             }
         }).start();
