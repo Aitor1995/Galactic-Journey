@@ -34,7 +34,7 @@ public class AdapterRecords extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
-        if(viewHolder==null){
+        if (viewHolder == null) {
             viewHolder = new ViewHolder();
             viewHolder.textViewNombre = (TextView) view.findViewById(R.id.textViewNombre);
             viewHolder.textViewNombre.setTypeface(this.typeface);

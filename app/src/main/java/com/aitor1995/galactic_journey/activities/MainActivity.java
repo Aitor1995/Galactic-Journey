@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.aitor1995.galactic_journey.R;
-import com.aitor1995.galactic_journey.fragments.AjustesFragment;
 import com.aitor1995.galactic_journey.fragments.MainFragment;
 
 
@@ -15,25 +14,13 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new MainFragment())
-                    .commit();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0)
-            getFragmentManager().popBackStack();
-        else
-            super.onBackPressed();
+        getFragmentManager().beginTransaction()
+                .add(R.id.container, new MainFragment())
+                .commit();
     }
 
     public void onJugarClick(View view) {
-        Intent intent = new Intent(this, JuegoActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(intent);
+        startActivity(new Intent(this, JuegoActivity.class));
     }
 
     public void onRecordsClick(View view) {
@@ -41,10 +28,6 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onOpcionesClick(View view) {
-        getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.animator.slide_left_enter, R.animator.slide_left_exit, R.animator.slide_right_enter, R.animator.slide_right_exit)
-                .replace(R.id.container, new AjustesFragment())
-                .addToBackStack(null)
-                .commit();
+        startActivity(new Intent(this, OpcionesActivity.class));
     }
 }

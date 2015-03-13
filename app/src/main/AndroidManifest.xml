@@ -3,13 +3,17 @@
     package="com.aitor1995.galactic_journey">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.aitor1995.galactic_journey.activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -19,13 +23,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.aitor1995.galactic_journey.activities.JuegoActivity"
+            android:name=".activities.JuegoActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.aitor1995.galactic_journey.activities.RecordsActivity"
+            android:name=".activities.RecordsActivity"
             android:label="@string/title_activity_records"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.OpcionesActivity"
+            android:label="@string/title_activity_opciones"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.aitor1995.galactic_journey.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.amazon.device.ads.AdActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
     </application>
 
 </manifest>
