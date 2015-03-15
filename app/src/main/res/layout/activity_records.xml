@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background">
@@ -27,13 +28,13 @@
         android:background="@drawable/boton_selector"
         android:onClick="onMenuClick" />
 
-    <com.amazon.device.ads.AdLayout
-        xmlns:Amazon="http://schemas.android.com/apk/lib/com.amazon.device.ads"
-        Amazon:adSize="320x50"
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/adview"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_records_id">
+    </com.google.android.gms.ads.AdView>
 </RelativeLayout>

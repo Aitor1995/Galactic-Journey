@@ -40,8 +40,11 @@ import com.aitor1995.galactic_journey.sqlite.RecordsContract;
 import com.aitor1995.galactic_journey.sqlite.RecordsSQLiteHelper;
 import com.aitor1995.galactic_journey.utils.AjustesApp;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Random;
 
 public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener {
@@ -516,6 +519,13 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
     }
 
+    private String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         synchronized (this.surfaceHolder) {
@@ -545,6 +555,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                                 ContentValues values = new ContentValues();
                                 values.put(RecordsContract.RecordEntry.COLUMNA_NOMBRE_JUGADOR, this.nombre);
                                 values.put(RecordsContract.RecordEntry.COLUMNA_PUNTUACION, (int) this.puntuacion);
+                                values.put(RecordsContract.RecordEntry.COLUMNA_FECHA, this.getDateTime());
                                 db.insert(RecordsContract.RecordEntry.NOMBRE_TABLA, null, values);
                                 db.close();
                             }

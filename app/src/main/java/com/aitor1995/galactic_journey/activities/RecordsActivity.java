@@ -9,28 +9,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.aitor1995.galactic_journey.BuildConfig;
 import com.aitor1995.galactic_journey.R;
 import com.aitor1995.galactic_journey.adapters.AdapterRecords;
 import com.aitor1995.galactic_journey.sqlite.RecordsContract.RecordEntry;
 import com.aitor1995.galactic_journey.sqlite.RecordsSQLiteHelper;
-import com.amazon.device.ads.AdLayout;
-import com.amazon.device.ads.AdRegistration;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 public class RecordsActivity extends BaseActivity {
-
-    private AdLayout adView;
-    private boolean funcionando = true;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_records);
-        AdRegistration.setAppKey("9d9e772de63240418e46b953f837741b");
-        if (BuildConfig.DEBUG) {
-            AdRegistration.enableTesting(true);
-            AdRegistration.enableLogging(true);
-        }
         RecordsSQLiteHelper recordsSQLiteHelper = new RecordsSQLiteHelper(this);
         SQLiteDatabase db = recordsSQLiteHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + RecordEntry.NOMBRE_TABLA + " ORDER BY " + RecordEntry.COLUMNA_PUNTUACION + " DESC, " + RecordEntry.COLUMNA_FECHA + " DESC", null);
@@ -39,29 +29,9 @@ public class RecordsActivity extends BaseActivity {
         AdapterRecords adapterRecords = new AdapterRecords(this, cursor, typeface);
         lvItems.setAdapter(adapterRecords);
         ((Button) findViewById(R.id.buttonMenu)).setTypeface(typeface);
-        this.adView = (AdLayout) findViewById(R.id.adview);
-        this.adView.loadAd();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (funcionando) {
-                    try {
-                        Thread.sleep(40000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (funcionando)
-                        adView.loadAd();
-                }
-            }
-        }).start();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        this.funcionando = false;
-        this.adView.destroy();
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     public void onMenuClick(View view) {

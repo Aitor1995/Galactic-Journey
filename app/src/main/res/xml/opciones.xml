@@ -19,10 +19,13 @@
             android:summaryOn="@string/pref_musica_summary_on"
             android:title="@string/pref_musica_titulo" />
         <com.aitor1995.galactic_journey.preferences.SeekPreference
+            android:title="@string/pref_valor_volumen_nombre"
             android:defaultValue="100"
             android:dependency="@string/pref_musica"
             android:key="@string/pref_valor_volumen"
-            android:title="@string/pref_valor_volumen_nombre"
             app:max="100" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_acerca_de">
+        <com.aitor1995.galactic_journey.preferences.AcercaDePreference android:title="@string/pref_acerca_de" />
     </PreferenceCategory>
 </PreferenceScreen>

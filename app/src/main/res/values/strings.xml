@@ -27,4 +27,14 @@
     <string name="title_activity_opciones">Opciones</string>
     <string name="title_activity_compras">Compras</string>
 
+    <string name="banner_records_id">ca-app-pub-3760553259632229/9849510194</string>
+
+    <string name="app_id">580766643432</string>
+    <string name="achievement_jugar_por_primera_vez">CgkI6OmOw_MQEAIQAQ</string>
+    <string name="achievement_jugar_5_veces_al_juego">CgkI6OmOw_MQEAIQAg</string>
+    <string name="achievement_jugar_10_veces_al_juego">CgkI6OmOw_MQEAIQAw</string>
+    <string name="achievement_jugar_20_veces_al_juego">CgkI6OmOw_MQEAIQBA</string>
+    <string name="achievement_jugar_50_veces_al_juego">CgkI6OmOw_MQEAIQBQ</string>
+    <string name="leaderboard_marcador">CgkI6OmOw_MQEAIQBg</string>
+    <string name="pref_acerca_de">Acerca De</string>
 </resources>

@@ -29,7 +29,7 @@ public class AjustesApp {
     private AjustesApp(Context context) {
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        this.controlJuego = this.sharedPreferences.getString(context.getString(R.string.pref_control_juego), "tactil");
+        this.controlJuego = this.sharedPreferences.getString(context.getString(R.string.pref_control_juego), "giroscopo");
         this.musica = this.sharedPreferences.getBoolean(context.getString(R.string.pref_musica), true);
         this.volumenMusica = this.sharedPreferences.getInt(context.getString(R.string.pref_valor_volumen), 100);
     }

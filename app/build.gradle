@@ -5,11 +5,11 @@ android {
     buildToolsVersion "22"
 
     defaultConfig {
-        applicationId "com.aitor1995.proyecto"
+        applicationId "com.aitor1995.galactic_journey"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.0.3"
     }
 
     buildTypes {
@@ -23,4 +23,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'ch.acra:acra:4.6.1'
+    compile project(':BaseGameUtils')
 }
