@@ -6,9 +6,11 @@ import android.view.View;
 
 import com.aitor1995.galactic_journey.R;
 import com.aitor1995.galactic_journey.fragments.MainFragment;
+import com.google.android.gms.games.Games;
 
 
 public class MainActivity extends BaseActivity {
+    private static final int REQUEST_ACHIEVEMENTS = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,5 +31,9 @@ public class MainActivity extends BaseActivity {
 
     public void onOpcionesClick(View view) {
         startActivity(new Intent(this, OpcionesActivity.class));
+    }
+
+    public void onLogrosClick(View view){
+        startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), REQUEST_ACHIEVEMENTS);
     }
 }

@@ -40,6 +40,7 @@
         <activity
             android:name=".activities.OpcionesActivity"
             android:label="@string/title_activity_opciones"
+            android:screenOrientation="landscape"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

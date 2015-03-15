@@ -22,6 +22,8 @@ public class MainFragment extends Fragment {
         boton.setTypeface(typeface);
         boton = (Button) view.findViewById(R.id.buttonOpciones);
         boton.setTypeface(typeface);
+        boton = (Button) view.findViewById(R.id.buttonLogros);
+        boton.setTypeface(typeface);
         return view;
     }
 

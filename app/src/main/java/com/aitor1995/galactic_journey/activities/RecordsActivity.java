@@ -15,8 +15,11 @@ import com.aitor1995.galactic_journey.sqlite.RecordsContract.RecordEntry;
 import com.aitor1995.galactic_journey.sqlite.RecordsSQLiteHelper;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.games.Games;
 
 public class RecordsActivity extends BaseActivity {
+    private static final int REQUEST_LEADERBOARD = 10000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,7 @@ public class RecordsActivity extends BaseActivity {
         AdapterRecords adapterRecords = new AdapterRecords(this, cursor, typeface);
         lvItems.setAdapter(adapterRecords);
         ((Button) findViewById(R.id.buttonMenu)).setTypeface(typeface);
+        ((Button) findViewById(R.id.buttonMarcadores)).setTypeface(typeface);
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -46,5 +50,9 @@ public class RecordsActivity extends BaseActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         super.onBackPressed();
+    }
+
+    public void onMarcadoresClick(View view) {
+        startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, getString(R.string.leaderboard_marcador)), REQUEST_LEADERBOARD);
     }
 }

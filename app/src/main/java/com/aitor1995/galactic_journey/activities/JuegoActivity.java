@@ -17,7 +17,7 @@ public class JuegoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.ajustes = AjustesApp.getInstance(this);
-        this.juegoSurfaceView = new JuegoSurfaceView(this);
+        this.juegoSurfaceView = new JuegoSurfaceView(this, mGoogleApiClient);
         this.juegoSurfaceView.setKeepScreenOn(true);
         this.juegoSurfaceView.setFocusable(true);
         this.juegoSurfaceView.setFocusableInTouchMode(true);
