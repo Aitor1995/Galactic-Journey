@@ -39,6 +39,8 @@ import com.aitor1995.galactic_journey.clases.PanelResultados;
 import com.aitor1995.galactic_journey.sqlite.RecordsContract;
 import com.aitor1995.galactic_journey.sqlite.RecordsSQLiteHelper;
 import com.aitor1995.galactic_journey.utils.AjustesApp;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,8 +94,10 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private boolean tecladoMostrado = false;
     private Boton botonAceptar;
     private Boton botonCompartir;
+    private GoogleApiClient mGoogleApiClient;
+    private boolean realizadoLogros = false;
 
-    public JuegoSurfaceView(Context context) {
+    public JuegoSurfaceView(Context context, GoogleApiClient googleApiClient) {
         super(context);
         this.context = context;
         this.surfaceHolder = getHolder();
@@ -108,6 +112,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         this.hilo = new Hilo();
         this.pixelsPuntuacion = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
         this.pixelsPeticionNombre = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 22, getResources().getDisplayMetrics());
+        this.mGoogleApiClient = googleApiClient;
     }
 
     private void vibrate(int milisegundos) {
@@ -350,6 +355,11 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         if (--this.nave.vidas == 0) {
                             this.numeroVida = bitmapsNumeros[0];
                             this.juegoTerminado = true;
+                            Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_por_primera_vez));
+                            Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_5_veces_al_juego), 1);
+                            Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_10_veces_al_juego), 1);
+                            Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_20_veces_al_juego), 1);
+                            Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_50_veces_al_juego), 1);
                             this.typeface = Typeface.createFromAsset(context.getAssets(), "fuente.otf");
                             this.panelResultados = new PanelResultados(
                                     (NinePatchDrawable) context.getResources().getDrawable(R.drawable.metalpanel_greencorner),
@@ -559,6 +569,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                                 db.insert(RecordsContract.RecordEntry.NOMBRE_TABLA, null, values);
                                 db.close();
                             }
+                            Games.Leaderboards.submitScore(mGoogleApiClient, getResources().getString(R.string.leaderboard_marcador), (int) puntuacion);
                             Intent intent = new Intent(this.context, RecordsActivity.class);
                             context.startActivity(intent);
                         }

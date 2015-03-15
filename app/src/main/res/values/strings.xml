@@ -37,4 +37,8 @@
     <string name="achievement_jugar_50_veces_al_juego">CgkI6OmOw_MQEAIQBQ</string>
     <string name="leaderboard_marcador">CgkI6OmOw_MQEAIQBg</string>
     <string name="pref_acerca_de">Acerca De</string>
+    <string name="signin_other_error">Fallo al iniciar sesion, pruebe mas tarde</string>
+    <string name="signin_failure">No ha sido posible iniciar sesión</string>
+    <string name="logros">Logros</string>
+    <string name="marcadores">Marcadores</string>
 </resources>
