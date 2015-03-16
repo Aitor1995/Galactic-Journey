@@ -45,5 +45,6 @@
     <string name="signin_failure">No ha sido posible iniciar sesión</string>
     <string name="logros">Logros</string>
     <string name="marcadores">Marcadores</string>
+    <string name="introduce_nombre">Introduce tu nombre</string>
 
 </resources>

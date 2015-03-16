@@ -34,9 +34,6 @@ public class JuegoActivity extends BaseActivity {
         if (this.ajustes.controlJuego.equals("giroscopo")) {
             this.juegoSurfaceView.sensorManager.unregisterListener(this.juegoSurfaceView);
         }
-        if (this.juegoSurfaceView.inputMethodManager != null) {
-            this.juegoSurfaceView.inputMethodManager.hideSoftInputFromWindow(this.juegoSurfaceView.getWindowToken(), 0);
-        }
     }
 
     @Override

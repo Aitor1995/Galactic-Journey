@@ -1,5 +1,6 @@
 package com.aitor1995.galactic_journey.views;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -23,10 +24,13 @@ import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.inputmethod.InputMethodManager;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.aitor1995.galactic_journey.BuildConfig;
 import com.aitor1995.galactic_journey.R;
@@ -56,7 +60,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private final Context context;
     private final AjustesApp ajustes;
     private final float pixelsPuntuacion;
-    private final float pixelsPeticionNombre;
     public MediaPlayer mediaPlayer;
     public SensorManager sensorManager;
     private Fondo[] fondos;
@@ -66,8 +69,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Bitmap xVida;
     private Bitmap numeroVida;
     private PanelResultados panelResultados;
-    private String nombre = "";
-    private RectF rectNombre;
     private ArrayList<Meteorito> meteoritos = new ArrayList<>();
     private double puntuacion = 0;
     private Nave nave;
@@ -89,13 +90,10 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     final int FRAGMENTO_TEMPORAL = TPS / FPS;
     long tiempoReferencia = System.nanoTime();
     private Typeface typeface;
-    public InputMethodManager inputMethodManager;
     private Vibrator vibrator;
-    private boolean tecladoMostrado = false;
     private Boton botonAceptar;
     private Boton botonCompartir;
     private GoogleApiClient mGoogleApiClient;
-    private boolean realizadoLogros = false;
 
     public JuegoSurfaceView(Context context, GoogleApiClient googleApiClient) {
         super(context);
@@ -111,7 +109,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         }
         this.hilo = new Hilo();
         this.pixelsPuntuacion = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
-        this.pixelsPeticionNombre = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 22, getResources().getDisplayMetrics());
         this.mGoogleApiClient = googleApiClient;
     }
 
@@ -246,13 +243,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 this.paint.getTextBounds(punct, 0, punct.length(), rect);
                 canvas.drawText(punct, (float) ((this.anchoPantalla - rect.width()) / 2), (float) (this.altoPantalla * 0.35), this.paint);
 
-                this.paint.setTextSize(this.pixelsPeticionNombre);
-                this.paint.getTextBounds("Escribe tu nombre: " + nombre, 0, ("Escribe tu nombre: " + nombre).length(), rect);
-                PointF pointF = new PointF((float) ((this.anchoPantalla - rect.width()) / 2), (float) (this.altoPantalla * 0.45));
-                canvas.drawText("Escribe tu nombre: " + nombre, pointF.x, pointF.y, this.paint);
-                this.rectNombre = new RectF(pointF.x - 30, pointF.y - 30, pointF.x + rect.width() + 30, pointF.y + rect.height() + 30);
-                this.paint.reset();
-
                 this.botonAceptar.dibujar(canvas);
                 this.botonCompartir.dibujar(canvas);
             }
@@ -331,30 +321,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
-    @Override
-    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
-        synchronized (this.surfaceHolder) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                this.inputMethodManager.toggleSoftInputFromWindow(this.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-                this.tecladoMostrado = false;
-            } else if (keyCode == KeyEvent.KEYCODE_DEL) {
-                if (this.nombre.length() > 0)
-                    this.nombre = this.nombre.substring(0, this.nombre.length() - 1);
-            } else {
-                if (this.nombre.length() <= 10)
-                    this.nombre += (char) event.getUnicodeChar();
-            }
-            return super.onKeyUp(keyCode, event);
-        }
-    }
-
-    @Override
-    public boolean dispatchKeyEventPreIme(@NonNull KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            this.tecladoMostrado = false;
-        }
-        return super.dispatchKeyEventPreIme(event);
-    }
 
     private void moverMeteoritosYColisiones() {
         for (int i = meteoritos.size() - 1; i >= 0; i--) {
@@ -397,8 +363,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                                     this.anchoPantalla,
                                     (int) (this.altoPantalla * 0.65)
                             );
-                            this.inputMethodManager = (InputMethodManager) this.context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                            this.inputMethodManager.toggleSoftInputFromWindow(this.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
                         } else {
                             this.meteoritos.remove(i);
                             switch (this.nave.vidas) {
@@ -563,10 +527,6 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                     PointF posicion = new PointF(event.getX(pointerIndex), event.getY(pointerIndex));
                     posiciones.put(pointerID, posicion);
                     if (this.juegoTerminado && event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                        if (this.rectNombre.contains((int) posicion.x, (int) posicion.y) && !this.tecladoMostrado) {
-                            this.tecladoMostrado = true;
-                            this.inputMethodManager.toggleSoftInputFromWindow(this.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-                        }
                         if (this.botonCompartir.isClickBoton((int) posicion.x, (int) posicion.y)) {
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_SEND);
@@ -575,20 +535,33 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                             this.context.startActivity(Intent.createChooser(intent, getResources().getString(R.string.compartir)));
                         }
                         if (this.botonAceptar.isClickBoton((int) posicion.x, (int) posicion.y)) {
-                            if (!this.nombre.trim().equals("")) {
-                                RecordsSQLiteHelper recordsSQLiteHelper = new RecordsSQLiteHelper(this.context);
-                                SQLiteDatabase db = recordsSQLiteHelper.getWritableDatabase();
-                                ContentValues values = new ContentValues();
-                                values.put(RecordsContract.RecordEntry.COLUMNA_NOMBRE_JUGADOR, this.nombre);
-                                values.put(RecordsContract.RecordEntry.COLUMNA_PUNTUACION, (int) this.puntuacion);
-                                values.put(RecordsContract.RecordEntry.COLUMNA_FECHA, this.getDateTime());
-                                db.insert(RecordsContract.RecordEntry.NOMBRE_TABLA, null, values);
-                                db.close();
-                            }
-                            if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
-                                Games.Leaderboards.submitScore(mGoogleApiClient, getResources().getString(R.string.leaderboard_marcador), (int) puntuacion);
-                            Intent intent = new Intent(this.context, RecordsActivity.class);
-                            context.startActivity(intent);
+                            LayoutInflater inflater = LayoutInflater.from(this.context);
+                            AlertDialog alert = new AlertDialog.Builder(context)
+                                    .setView(inflater.inflate(R.layout.introducir_nombre_dialog, null))
+                                    .create();
+                            alert.show();
+                            final EditText editText = (EditText) alert.findViewById(R.id.editText);
+                            Button boton = (Button) alert.findViewById(R.id.buttonAceptar);
+                            boton.setTypeface(typeface);
+                            boton.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (!editText.getText().toString().trim().equals("")) {
+                                        RecordsSQLiteHelper recordsSQLiteHelper = new RecordsSQLiteHelper(context);
+                                        SQLiteDatabase db = recordsSQLiteHelper.getWritableDatabase();
+                                        ContentValues values = new ContentValues();
+                                        values.put(RecordsContract.RecordEntry.COLUMNA_NOMBRE_JUGADOR, editText.getText().toString());
+                                        values.put(RecordsContract.RecordEntry.COLUMNA_PUNTUACION, (int) puntuacion);
+                                        values.put(RecordsContract.RecordEntry.COLUMNA_FECHA, getDateTime());
+                                        db.insert(RecordsContract.RecordEntry.NOMBRE_TABLA, null, values);
+                                        db.close();
+                                    }
+                                    if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+                                        Games.Leaderboards.submitScore(mGoogleApiClient, getResources().getString(R.string.leaderboard_marcador), (int) puntuacion);
+                                    Intent intent = new Intent(context, RecordsActivity.class);
+                                    context.startActivity(intent);
+                                }
+                            });
                         }
                     }
                     break;
