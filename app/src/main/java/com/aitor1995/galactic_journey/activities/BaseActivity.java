@@ -1,6 +1,8 @@
 package com.aitor1995.galactic_journey.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -14,13 +16,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
-public class BaseActivity extends ActionBarActivity  implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class BaseActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    public static final String KEY_INICIO_SESION = "inicio_sesion";
     public GoogleApiClient mGoogleApiClient;
     private static int RC_SIGN_IN = 9001;
     private boolean mResolvingConnectionFailure = false;
     private boolean mAutoStartSignInFlow = true;
     private boolean mSignInClicked = false;
+    public SharedPreferences mSharedPreferences = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,7 @@ public class BaseActivity extends ActionBarActivity  implements GoogleApiClient.
         }
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
+        mSharedPreferences = getSharedPreferences("googleplaygames",Context.MODE_PRIVATE);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -40,13 +45,15 @@ public class BaseActivity extends ActionBarActivity  implements GoogleApiClient.
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if (mSharedPreferences.getBoolean(KEY_INICIO_SESION, true))
+            mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mGoogleApiClient.disconnect();
+        if (mSharedPreferences.getBoolean(KEY_INICIO_SESION, true))
+            mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -56,7 +63,8 @@ public class BaseActivity extends ActionBarActivity  implements GoogleApiClient.
 
     @Override
     public void onConnectionSuspended(int i) {
-        mGoogleApiClient.connect();
+        if (mSharedPreferences.getBoolean(KEY_INICIO_SESION, true))
+            mGoogleApiClient.connect();
     }
 
     @Override
@@ -80,6 +88,9 @@ public class BaseActivity extends ActionBarActivity  implements GoogleApiClient.
                 mGoogleApiClient.connect();
             } else {
                 BaseGameUtils.showActivityResultError(this, requestCode, resultCode, R.string.signin_failure);
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                editor.putBoolean(KEY_INICIO_SESION, false);
+                editor.apply();
             }
         }
     }

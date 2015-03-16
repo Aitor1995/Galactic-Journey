@@ -1,6 +1,7 @@
 package com.aitor1995.galactic_journey.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -21,6 +22,17 @@ public class MainActivity extends BaseActivity {
                 .commit();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!mSharedPreferences.getBoolean(BaseActivity.KEY_INICIO_SESION, true)){
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            editor.putBoolean(KEY_INICIO_SESION, true);
+            editor.apply();
+            mGoogleApiClient.connect();
+        }
+    }
+
     public void onJugarClick(View view) {
         startActivity(new Intent(this, JuegoActivity.class));
     }
@@ -33,7 +45,9 @@ public class MainActivity extends BaseActivity {
         startActivity(new Intent(this, OpcionesActivity.class));
     }
 
-    public void onLogrosClick(View view){
-        startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), REQUEST_ACHIEVEMENTS);
+    public void onLogrosClick(View view) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), REQUEST_ACHIEVEMENTS);
+        }
     }
 }

@@ -314,6 +314,20 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.moverMeteoritosYColisiones();
             this.crearMeteoritos();
             this.puntuacion += 0.1;
+            if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                if(puntuacion == 2000){
+                    Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_conseguir_2000_puntos));
+                }
+                if(puntuacion == 5000){
+                    Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_conseguir_5000_puntos));
+                }
+                if(puntuacion == 1000 && this.nave.vidas == 3){
+                    Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_conseguir_1000_puntos_con_3_vidas));
+                }
+                if(puntuacion == 3000 && this.nave.vidas == 3){
+                    Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_conseguir_3000_puntos_con_3_vidas));
+                }
+            }
         }
     }
 
@@ -355,11 +369,13 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         if (--this.nave.vidas == 0) {
                             this.numeroVida = bitmapsNumeros[0];
                             this.juegoTerminado = true;
-                            Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_por_primera_vez));
-                            Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_5_veces_al_juego), 1);
-                            Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_10_veces_al_juego), 1);
-                            Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_20_veces_al_juego), 1);
-                            Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_50_veces_al_juego), 1);
+                            if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                                Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_por_primera_vez));
+                                Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_5_veces_al_juego), 1);
+                                Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_10_veces_al_juego), 1);
+                                Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_20_veces_al_juego), 1);
+                                Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_50_veces_al_juego), 1);
+                            }
                             this.typeface = Typeface.createFromAsset(context.getAssets(), "fuente.otf");
                             this.panelResultados = new PanelResultados(
                                     (NinePatchDrawable) context.getResources().getDrawable(R.drawable.metalpanel_greencorner),
@@ -569,7 +585,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                                 db.insert(RecordsContract.RecordEntry.NOMBRE_TABLA, null, values);
                                 db.close();
                             }
-                            Games.Leaderboards.submitScore(mGoogleApiClient, getResources().getString(R.string.leaderboard_marcador), (int) puntuacion);
+                            if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+                                Games.Leaderboards.submitScore(mGoogleApiClient, getResources().getString(R.string.leaderboard_marcador), (int) puntuacion);
                             Intent intent = new Intent(this.context, RecordsActivity.class);
                             context.startActivity(intent);
                         }

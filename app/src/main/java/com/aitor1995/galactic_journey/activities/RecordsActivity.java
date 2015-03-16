@@ -53,6 +53,8 @@ public class RecordsActivity extends BaseActivity {
     }
 
     public void onMarcadoresClick(View view) {
-        startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, getString(R.string.leaderboard_marcador)), REQUEST_LEADERBOARD);
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, getString(R.string.leaderboard_marcador)), REQUEST_LEADERBOARD);
+        }
     }
 }
