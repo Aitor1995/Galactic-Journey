@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu">Menú</string>
+    <string name="compartir">Compartir</string>
+    <string name="introduce_nombre">Introduce tu nombre:</string>
+    <string name="jugar">Jugar</string>
+    <string name="logros">Logros</string>
+    <string name="marcadores">Marcadores</string>
+    <string name="opciones">Opciones</string>
+    <string name="pref_acerca_de">Acerca De</string>
+    <string name="pref_control_juego_summary">Método de control de la nave</string>
+    <string name="pref_control_juego_titulo">Control del Juego</string>
+    <string name="pref_musica_titulo">Música</string>
+    <string name="pref_musica_summary_on">Música activada</string>
+    <string name="pref_musica_summary_off">Música desactivada</string>
+    <string name="pref_valor_volumen_nombre">Nivel de Volumen</string>
+    <string name="pref_valor_volumen_summary">El volumen actual es de %1$d</string>
+    <string name="record">Récords</string>
+    <string name="signin_failure">No ha sido posible iniciar sesión</string>
+    <string name="signin_other_error">Fallo al iniciar sesion, pruebe mas tarde</string>
+    <string name="texto_compartir">He conseguido %1$d puntos en el juego #GalacticJourney</string>
+    <string name="title_activity_opciones">Opciones</string>
+    <string name="title_activity_records">Récords</string>
+    <string name="aceptar">Aceptar</string>
+</resources>

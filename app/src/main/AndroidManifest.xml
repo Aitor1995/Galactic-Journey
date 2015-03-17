@@ -47,10 +47,6 @@
                 android:value="com.aitor1995.galactic_journey.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.ComprasActivity"
-            android:label="@string/title_activity_compras"
-            android:screenOrientation="landscape" />
-        <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />

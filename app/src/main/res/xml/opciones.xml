@@ -4,12 +4,12 @@
     <PreferenceCategory android:title="@string/pref_control_juego_titulo">
         <ListPreference
             android:defaultValue="giroscopo"
-            android:dialogTitle="@string/pref_control_juego_nombre"
+            android:dialogTitle="@string/pref_control_juego_titulo"
             android:entries="@array/pref_control_juego_entries"
             android:entryValues="@array/pref_control_juego_values"
             android:key="@string/pref_control_juego"
             android:summary="@string/pref_control_juego_summary"
-            android:title="@string/pref_control_juego_nombre" />
+            android:title="@string/pref_control_juego_titulo" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_musica_titulo">
         <SwitchPreference

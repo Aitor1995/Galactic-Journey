@@ -359,7 +359,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                             );
                             this.botonAceptar = new Boton(
                                     (NinePatchDrawable) this.context.getResources().getDrawable(R.drawable.boton),
-                                    "Aceptar",
+                                    context.getResources().getString(R.string.aceptar),
                                     this.context,
                                     this.typeface,
                                     this.anchoPantalla,
@@ -367,7 +367,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                             );
                             this.botonCompartir = new Boton(
                                     (NinePatchDrawable) this.context.getResources().getDrawable(R.drawable.boton),
-                                    "Compartir",
+                                    context.getResources().getString(R.string.compartir),
                                     this.context,
                                     this.typeface,
                                     this.anchoPantalla,

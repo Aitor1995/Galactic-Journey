@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="pref_control_juego_values">
+    <string-array name="pref_control_juego_values" translatable="false">
         <item>tactil</item>
         <item>giroscopo</item>
     </string-array>
     <string-array name="pref_control_juego_entries">
-        <item>Pantalla Táctil</item>
-        <item>Giróscopio</item>
+        <item>Touch Screen</item>
+        <item>Gyroscope</item>
     </string-array>
 </resources>

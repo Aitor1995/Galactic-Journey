@@ -2,49 +2,42 @@
 <resources>
 
     <string name="app_name" translatable="false">Galactic Journey</string>
-    <!-- Menú principal -->
-    <string name="menu">Menú</string>
-    <string name="jugar">Jugar</string>
-    <string name="record">Récords</string>
-    <string name="opciones">Opciones</string>
-    <!--Compartir-->
-    <string name="compartir">Compartir</string>
-    <string name="texto_compartir">He conseguido %d puntos en el juego #GalacticJourney</string>
-    <!-- Preferencias -->
-    <string name="pref_control_juego_titulo">Control del Juego</string>
-    <string name="pref_control_juego">pref_control_juego</string>
-    <string name="pref_control_juego_nombre">Control de Juego</string>
-    <string name="pref_musica_titulo">Música</string>
-    <string name="pref_musica">pref_musica</string>
-    <string name="pref_musica_summary_on">Música activada</string>
-    <string name="pref_musica_summary_off">Música desactivada</string>
-    <string name="pref_valor_volumen">pref_valor_volumen</string>
-    <string name="pref_valor_volumen_nombre">Nivel de Volumen</string>
-    <string name="pref_control_juego_summary">Método de control del personaje principal</string>
-    <string name="pref_valor_volumen_summary">El volumen actual es de %1$d</string>
-    <string name="pref_acerca_de">Acerca De</string>
-    <!--Titulos Activities-->
+    <string name="menu">Menu</string>
+    <string name="jugar">Play</string>
+    <string name="opciones">Settings</string>
+    <string name="compartir">Share</string>
+    <string name="pref_control_juego_titulo">Game Control</string>
+    <string name="pref_control_juego" translatable="false">pref_control_juego</string>
+    <string name="pref_musica" translatable="false">pref_musica</string>
+    <string name="pref_valor_volumen" translatable="false">pref_valor_volumen</string>
+    <string name="pref_control_juego_summary">Control method of the ship</string>
+    <string name="pref_acerca_de">About</string>
+    <string name="banner_records_id" translatable="false">ca-app-pub-3760553259632229/9849510194</string>
+    <string name="app_id" translatable="false">580766643432</string>
+    <string name="achievement_jugar_por_primera_vez" translatable="false">CgkI6OmOw_MQEAIQAQ</string>
+    <string name="achievement_jugar_5_veces_al_juego" translatable="false">CgkI6OmOw_MQEAIQAg</string>
+    <string name="achievement_jugar_10_veces_al_juego" translatable="false">CgkI6OmOw_MQEAIQAw</string>
+    <string name="achievement_jugar_20_veces_al_juego" translatable="false">CgkI6OmOw_MQEAIQBA</string>
+    <string name="achievement_jugar_50_veces_al_juego" translatable="false">CgkI6OmOw_MQEAIQBQ</string>
+    <string name="achievement_conseguir_2000_puntos" translatable="false">CgkI6OmOw_MQEAIQCA</string>
+    <string name="achievement_conseguir_5000_puntos" translatable="false">CgkI6OmOw_MQEAIQCQ</string>
+    <string name="achievement_conseguir_1000_puntos_con_3_vidas" translatable="false">CgkI6OmOw_MQEAIQCg</string>
+    <string name="achievement_conseguir_3000_puntos_con_3_vidas" translatable="false">CgkI6OmOw_MQEAIQCw</string>
+    <string name="leaderboard_marcador" translatable="false">CgkI6OmOw_MQEAIQBg</string>
+    <string name="logros">Achievements</string>
+    <string name="marcadores">Leaderboards</string>
+    <string name="introduce_nombre">Insert your name:</string>
+    <string name="pref_musica_titulo">Music</string>
+    <string name="pref_musica_summary_on">Music enabled</string>
+    <string name="pref_musica_summary_off">Music disabled</string>
+    <string name="record">Records</string>
+    <string name="pref_valor_volumen_nombre">Volume Level</string>
+    <string name="pref_valor_volumen_summary">The current volume is %1$d</string>
+    <string name="signin_failure">Unable to login</string>
+    <string name="signin_other_error">Failed to login, try later</string>
+    <string name="texto_compartir">I get 100 points in the game #GalacticJourney</string>
+    <string name="title_activity_opciones">Settings</string>
     <string name="title_activity_records">Records</string>
-    <string name="title_activity_opciones">Opciones</string>
-    <string name="title_activity_compras">Compras</string>
-    <!--Publicidad-->
-    <string name="banner_records_id">ca-app-pub-3760553259632229/9849510194</string>
-    <!--Play Games-->
-    <string name="app_id">580766643432</string>
-    <string name="achievement_jugar_por_primera_vez">CgkI6OmOw_MQEAIQAQ</string>
-    <string name="achievement_jugar_5_veces_al_juego">CgkI6OmOw_MQEAIQAg</string>
-    <string name="achievement_jugar_10_veces_al_juego">CgkI6OmOw_MQEAIQAw</string>
-    <string name="achievement_jugar_20_veces_al_juego">CgkI6OmOw_MQEAIQBA</string>
-    <string name="achievement_jugar_50_veces_al_juego">CgkI6OmOw_MQEAIQBQ</string>
-    <string name="achievement_conseguir_2000_puntos">CgkI6OmOw_MQEAIQCA</string>
-    <string name="achievement_conseguir_5000_puntos">CgkI6OmOw_MQEAIQCQ</string>
-    <string name="achievement_conseguir_1000_puntos_con_3_vidas">CgkI6OmOw_MQEAIQCg</string>
-    <string name="achievement_conseguir_3000_puntos_con_3_vidas">CgkI6OmOw_MQEAIQCw</string>
-    <string name="leaderboard_marcador">CgkI6OmOw_MQEAIQBg</string>
-    <string name="signin_other_error">Fallo al iniciar sesion, pruebe mas tarde</string>
-    <string name="signin_failure">No ha sido posible iniciar sesión</string>
-    <string name="logros">Logros</string>
-    <string name="marcadores">Marcadores</string>
-    <string name="introduce_nombre">Introduce tu nombre</string>
+    <string name="aceptar">Accept</string>
 
 </resources>
