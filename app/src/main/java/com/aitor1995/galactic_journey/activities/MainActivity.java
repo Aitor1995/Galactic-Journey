@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.aitor1995.galactic_journey.R;
 import com.aitor1995.galactic_journey.fragments.MainFragment;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.games.Games;
 
 
@@ -31,6 +32,18 @@ public class MainActivity extends BaseActivity {
             editor.apply();
             mGoogleApiClient.connect();
         }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        super.onConnected(bundle);
+        findViewById(R.id.buttonLogros).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        super.onConnectionFailed(connectionResult);
+        findViewById(R.id.buttonLogros).setVisibility(View.INVISIBLE);
     }
 
     public void onJugarClick(View view) {

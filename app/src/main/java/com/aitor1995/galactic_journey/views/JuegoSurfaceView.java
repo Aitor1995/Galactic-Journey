@@ -19,7 +19,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
@@ -94,6 +96,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Boton botonAceptar;
     private Boton botonCompartir;
     private GoogleApiClient mGoogleApiClient;
+    private SoundPool efectos;
+    private int sonidoFinJuego;
 
     public JuegoSurfaceView(Context context, GoogleApiClient googleApiClient) {
         super(context);
@@ -102,6 +106,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         this.surfaceHolder.addCallback(this);
         this.ajustes = AjustesApp.getInstance(this.context);
         if (this.ajustes.musica) {
+            this.efectos = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
+            this.sonidoFinJuego = this.efectos.load(this.context, R.raw.fin_juego, 1);
             this.mediaPlayer = MediaPlayer.create(this.context, R.raw.musica_fondo);
             this.mediaPlayer.setVolume((float) this.ajustes.volumenMusica / 100, (float) this.ajustes.volumenMusica / 100);
             this.mediaPlayer.setLooping(true);
@@ -335,6 +341,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         if (--this.nave.vidas == 0) {
                             this.numeroVida = bitmapsNumeros[0];
                             this.juegoTerminado = true;
+                            if (this.ajustes.musica) {
+                                this.efectos.play(this.sonidoFinJuego, this.ajustes.volumenMusica, this.ajustes.volumenMusica, 1, 0, 1);
+                            }
                             if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                                 Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_por_primera_vez));
                                 Games.Achievements.increment(mGoogleApiClient, getResources().getString(R.string.achievement_jugar_5_veces_al_juego), 1);
