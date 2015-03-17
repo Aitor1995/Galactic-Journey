@@ -34,7 +34,7 @@ public class BaseActivity extends ActionBarActivity implements GoogleApiClient.C
         }
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        mSharedPreferences = getSharedPreferences("googleplaygames",Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences("googleplaygames", Context.MODE_PRIVATE);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)

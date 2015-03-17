@@ -24,9 +24,9 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        if(!mSharedPreferences.getBoolean(BaseActivity.KEY_INICIO_SESION, true)){
+    protected void onStart() {
+        super.onStart();
+        if (!mSharedPreferences.getBoolean(BaseActivity.KEY_INICIO_SESION, true)) {
             SharedPreferences.Editor editor = mSharedPreferences.edit();
             editor.putBoolean(KEY_INICIO_SESION, true);
             editor.apply();

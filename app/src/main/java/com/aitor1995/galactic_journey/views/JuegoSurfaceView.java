@@ -25,7 +25,6 @@ import android.media.SoundPool;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -98,6 +97,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private GoogleApiClient mGoogleApiClient;
     private SoundPool efectos;
     private int sonidoFinJuego;
+    private int sonidoExplosion;
 
     public JuegoSurfaceView(Context context, GoogleApiClient googleApiClient) {
         super(context);
@@ -106,8 +106,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         this.surfaceHolder.addCallback(this);
         this.ajustes = AjustesApp.getInstance(this.context);
         if (this.ajustes.musica) {
-            this.efectos = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
+            this.efectos = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
             this.sonidoFinJuego = this.efectos.load(this.context, R.raw.fin_juego, 1);
+            this.sonidoExplosion = this.efectos.load(this.context, R.raw.explode, 1);
             this.mediaPlayer = MediaPlayer.create(this.context, R.raw.musica_fondo);
             this.mediaPlayer.setVolume((float) this.ajustes.volumenMusica / 100, (float) this.ajustes.volumenMusica / 100);
             this.mediaPlayer.setLooping(true);
@@ -311,16 +312,16 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.crearMeteoritos();
             this.puntuacion += 0.1;
             if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-                if(puntuacion == 2000){
+                if (puntuacion == 2000) {
                     Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_conseguir_2000_puntos));
                 }
-                if(puntuacion == 5000){
+                if (puntuacion == 5000) {
                     Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_conseguir_5000_puntos));
                 }
-                if(puntuacion == 1000 && this.nave.vidas == 3){
+                if (puntuacion == 1000 && this.nave.vidas == 3) {
                     Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_conseguir_1000_puntos_con_3_vidas));
                 }
-                if(puntuacion == 3000 && this.nave.vidas == 3){
+                if (puntuacion == 3000 && this.nave.vidas == 3) {
                     Games.Achievements.unlock(mGoogleApiClient, getResources().getString(R.string.achievement_conseguir_3000_puntos_con_3_vidas));
                 }
             }
@@ -373,6 +374,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                                     (int) (this.altoPantalla * 0.65)
                             );
                         } else {
+                            if (this.ajustes.musica) {
+                                this.efectos.play(this.sonidoExplosion, this.ajustes.volumenMusica, this.ajustes.volumenMusica, 1, 0, 1);
+                            }
                             this.meteoritos.remove(i);
                             switch (this.nave.vidas) {
                                 case 2:
