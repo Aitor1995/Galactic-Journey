@@ -36,6 +36,9 @@ public class RecordsActivity extends BaseActivity {
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+        if (!mSharedPreferences.getBoolean(BaseActivity.KEY_INICIO_SESION, true)) {
+            findViewById(R.id.buttonMarcadores).setVisibility(View.INVISIBLE);
+        }
     }
 
     public void onMenuClick(View view) {
