@@ -21,6 +21,11 @@ public class AdapterRecords extends CursorAdapter {
         TextView textViewPuntuacion;
     }
 
+    @Override
+    public boolean isEnabled(int position){
+        return false;
+    }
+
     public AdapterRecords(Context context, Cursor c, Typeface typeface) {
         super(context, c, 0);
         this.typeface = typeface;
