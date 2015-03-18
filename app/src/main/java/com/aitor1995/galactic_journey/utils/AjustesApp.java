@@ -6,9 +6,17 @@ import android.preference.PreferenceManager;
 
 import com.aitor1995.galactic_journey.R;
 
+/**
+ * Clase en la que se leen los ajustes de la aplicacion
+ */
 public class AjustesApp {
     public static AjustesApp ajustes;
 
+    /**
+     * Crea una nueva instancia de la clase si esta no existe
+     * @param context contexto de la aplicacion
+     * @return ajustes de la aplicacion
+     */
     public static AjustesApp getInstance(Context context) {
         if (ajustes == null) {
             ajustes = new AjustesApp(context);
@@ -16,6 +24,9 @@ public class AjustesApp {
         return ajustes;
     }
 
+    /**
+     * Invalida los ajustes guardados en la clase
+     */
     public static void invalidate() {
         ajustes = null;
     }
@@ -26,6 +37,10 @@ public class AjustesApp {
     public boolean musica;
     public int volumenMusica;
 
+    /**
+     * Constructor que lee los ajustes de la aplicacion de los sharedPreferences
+     * @param context contexto de la aplicacion
+     */
     private AjustesApp(Context context) {
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 

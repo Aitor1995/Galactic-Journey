@@ -3,15 +3,27 @@ package com.aitor1995.galactic_journey.clases;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 
+/**
+ * Clase que representa una nave
+ */
 public class Nave extends Imagen {
     public RectF[] rectangulos = new RectF[2];
     public int vidas = 3;
 
+    /**
+     * Constructor que crea una nave desde una imagen y un punto de origen
+     * @param imagen imagen de la nave
+     * @param x coordenada x del punto
+     * @param y coordenada y del punto
+     */
     public Nave(Bitmap imagen, float x, float y) {
         super(imagen, x, y);
         this.setRectangulos();
     }
 
+    /**
+     * Establece los rectangulos para las colisiones
+     */
     public void setRectangulos() {
         int anchoNave = this.imagen.getWidth();
         int altoNave = this.imagen.getHeight();
@@ -33,6 +45,10 @@ public class Nave extends Imagen {
         );
     }
 
+    /**
+     * Mueve la nave con una velocidad determinada
+     * @param velocidad velocidad de movimiento de la nave
+     */
     public void mover(int velocidad) {
         this.posicion.y += velocidad;
         this.setRectangulos();

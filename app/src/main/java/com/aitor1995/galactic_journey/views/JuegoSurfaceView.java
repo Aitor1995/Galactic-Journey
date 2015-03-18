@@ -119,6 +119,11 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         this.mGoogleApiClient = googleApiClient;
     }
 
+    /**
+     * Funcion que hace vibrar el dispositivo una cantidad de milisegundo
+     *
+     * @param milisegundos milisegundos que vibra el dispositivo
+     */
     private void vibrate(int milisegundos) {
         if (this.vibrator == null)
             this.vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
@@ -167,7 +172,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 bitmapFondo = Bitmap.createScaledBitmap(bitmapFondo, bitmapFondo.getWidth(), altoPantalla, true);
                 fondos = new Fondo[2];
                 fondos[0] = new Fondo(bitmapFondo, 0, 0);
-                fondos[1] = new Fondo(bitmapFondo, fondos[0].posicion.x + bitmapFondo.getWidth(), 0);
+                fondos[1] = new Fondo(bitmapFondo, fondos[0].posicion.x + bitmapFondo.getWidth() - 10, 0);
 
                 Bitmap bitmapNave = BitmapFactory.decodeResource(context.getResources(), R.drawable.nave1_azul);
                 nave = new Nave(bitmapNave, (float) (0.1 * anchoPantalla), (altoPantalla - bitmapNave.getHeight()) / 2);
@@ -203,10 +208,12 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
     private void dibujar(Canvas canvas) {
         try {
-            canvas.drawRGB(255, 255, 255);
+            // Dibuja los fondos
             canvas.drawBitmap(this.fondos[0].imagen, this.fondos[0].posicion.x, this.fondos[0].posicion.y, null);
             canvas.drawBitmap(this.fondos[1].imagen, this.fondos[1].posicion.x, this.fondos[1].posicion.y, null);
+            // Dibuja la nave
             canvas.drawBitmap(this.nave.imagen, this.nave.posicion.x, this.nave.posicion.y, null);
+            // Dibuja los rectangulos de la nave
             this.paint.setColor(Color.RED);
             this.paint.setStyle(Paint.Style.STROKE);
             if (BuildConfig.DEBUG) {
@@ -217,6 +224,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.paint.reset();
             this.paint.setColor(Color.RED);
             this.paint.setStyle(Paint.Style.STROKE);
+            // Dibuja los meteoritos con sus rectangulos
             for (Meteorito meteorito : meteoritos) {
                 canvas.drawBitmap(meteorito.imagen, meteorito.posicion.x, meteorito.posicion.y, null);
                 if (BuildConfig.DEBUG) {
@@ -226,9 +234,11 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 }
             }
             this.paint.reset();
+            // Dibuja las vidas
             canvas.drawBitmap(this.iconoNaveVida, (float) (this.anchoPantalla * 0.02), (float) (this.altoPantalla * 0.02), null);
             canvas.drawBitmap(this.xVida, (float) (this.anchoPantalla * 0.05), (float) (this.altoPantalla * 0.025), null);
             canvas.drawBitmap(this.numeroVida, (float) (this.anchoPantalla * 0.065), (float) (this.altoPantalla * 0.025), null);
+            // Dibuja la puntuacion
             ArrayList<Bitmap> numeros = this.crearImagenesPuntuacion((int) puntuacion);
             float posicion = 0.95F;
             for (int i = 0; i < numeros.size(); i++) {
@@ -240,8 +250,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 this.paint.setARGB(75, 0, 0, 255);
                 canvas.drawRect(0, 0, this.anchoPantalla, this.altoPantalla, this.paint);
                 this.paint.reset();
-
+                // Dibuja el panel de resultados
                 this.panelResultados.imagen.draw(canvas);
+                // Dibuja la puntuacion
                 String punct = (int) this.puntuacion + "";
                 this.paint.setTypeface(this.typeface);
                 this.paint.setAntiAlias(true);
@@ -249,7 +260,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                 Rect rect = new Rect();
                 this.paint.getTextBounds(punct, 0, punct.length(), rect);
                 canvas.drawText(punct, (float) ((this.anchoPantalla - rect.width()) / 2), (float) (this.altoPantalla * 0.35), this.paint);
-
+                // Dibuja los botones
                 this.botonAceptar.dibujar(canvas);
                 this.botonCompartir.dibujar(canvas);
             }
@@ -257,6 +268,11 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
+    /**
+     * Crea una array de bitmaps con los numeros de la puntuacion
+     * @param puntuacion puntuacion a pasar a bitmaps
+     * @return array de bitmaps con los numeros
+     */
     private ArrayList<Bitmap> crearImagenesPuntuacion(int puntuacion) {
         ArrayList<Bitmap> numeros = new ArrayList<>();
         while (puntuacion > 0) {
@@ -328,7 +344,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
-
+    /**
+     * Muve los meteoritos y comprueba las colisiones. Controlando las vidas y logros del juego.
+     */
     private void moverMeteoritosYColisiones() {
         for (int i = meteoritos.size() - 1; i >= 0; i--) {
             Meteorito meteorito = meteoritos.get(i);
@@ -396,6 +414,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         puntuacion += 0.1;
     }
 
+    /**
+     * Crea los meteoritos de manera aleatoria
+     */
     private void crearMeteoritos() {
         //TODO Mejorar la aparicion de meteoritos
         if (this.random.nextInt(10) == 0) {
@@ -431,6 +452,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
+    /**
+     * Controla el movimiento de la nave mediante el giroscopio
+     */
     private void movimientoGiroscopio() {
         if (this.nave.posicion.y < 0 && this.nave.posicion.y <= this.altoPantalla - this.nave.imagen.getHeight()) {
             this.nave.posicion.y = 0;
@@ -441,6 +465,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
+    /**
+     * Controla el movimiento de la nave mediante la pantalla tactil
+     */
     private void movimientoTactil() {
         //TODO Mejorar movimiento con pantalla táctil
         if (this.posiciones.entrySet().iterator().hasNext()) {
@@ -453,6 +480,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
+    /**
+     * Mueve los fondos del juego
+     */
     private void moverFondos() {
         this.fondos[0].mover(3);
         this.fondos[1].mover(3);
@@ -522,6 +552,10 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
     }
 
+    /**
+     * Consigue el string de la fecha actual
+     * @return fecha actual en formato yyyy-MM-dd HH:mm:ss
+     */
     private String getDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -540,6 +574,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                     PointF posicion = new PointF(event.getX(pointerIndex), event.getY(pointerIndex));
                     posiciones.put(pointerID, posicion);
                     if (this.juegoTerminado && event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        // Click boton compartir
                         if (this.botonCompartir.isClickBoton((int) posicion.x, (int) posicion.y)) {
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_SEND);
@@ -547,6 +582,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                             intent.setType("text/plain");
                             this.context.startActivity(Intent.createChooser(intent, getResources().getString(R.string.compartir)));
                         }
+                        // Click boton aceptar
                         if (this.botonAceptar.isClickBoton((int) posicion.x, (int) posicion.y)) {
                             LayoutInflater inflater = LayoutInflater.from(this.context);
                             AlertDialog alert = new AlertDialog.Builder(context)

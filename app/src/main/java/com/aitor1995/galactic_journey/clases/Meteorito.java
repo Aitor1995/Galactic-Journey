@@ -3,12 +3,24 @@ package com.aitor1995.galactic_journey.clases;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 
+/**
+ * Clase que representa a un meteorito
+ */
 public class Meteorito extends Imagen {
     private final int tamanio;
     private final int velocidad;
     private final int angulo;
     public RectF[] rectangulos = new RectF[3];
 
+    /**
+     * Constructor que crea un meteorito en un punto
+     * @param imagen bitmap del meteorito
+     * @param x posicion x del punto
+     * @param y posicion y del punto
+     * @param tamanio tamaño del meteorito
+     * @param velocidad velocidad de movimiento del meteorito
+     * @param angulo angulo del meteorito
+     */
     public Meteorito(Bitmap imagen, float x, float y, int tamanio, int velocidad, int angulo) {
         super(imagen, x, y);
         this.tamanio = tamanio;
@@ -17,6 +29,9 @@ public class Meteorito extends Imagen {
         this.setRectangulos();
     }
 
+    /**
+     * Establece los rectangulos del meteorito dependiendo del tamaño
+     */
     public void setRectangulos() {
         int anchoMeteorito = this.imagen.getWidth();
         int altoMeteorito = this.imagen.getHeight();
@@ -67,6 +82,9 @@ public class Meteorito extends Imagen {
         }
     }
 
+    /**
+     * Mueve el meteorito teniendo en cuenta su velocidad y angulo
+     */
     public void mover() {
         this.posicion.x -= this.velocidad * Math.sin(Math.toRadians(90 - this.angulo));
         this.posicion.y -= this.velocidad * Math.sin(Math.toRadians(this.angulo));

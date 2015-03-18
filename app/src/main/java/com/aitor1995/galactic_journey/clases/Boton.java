@@ -8,6 +8,9 @@ import android.graphics.Typeface;
 import android.graphics.drawable.NinePatchDrawable;
 import android.util.TypedValue;
 
+/**
+ * Clase que representa un boton con su texto
+ */
 public class Boton {
     public NinePatchDrawable imagen;
     public String texto;
@@ -15,6 +18,15 @@ public class Boton {
     private float dp6;
     private Rect rect = new Rect();
 
+    /**
+     * Constructor que crea un boton con su texto
+     * @param ninePatchDrawable imagen del botón
+     * @param texto texto del botón
+     * @param context contexto de la aplicación
+     * @param typeface tipo de letra del texto
+     * @param anchoPantalla ancho del la pantalla del dispositivo
+     * @param inicioY posicion en Y donde empezar a dibujar el boton
+     */
     public Boton(NinePatchDrawable ninePatchDrawable, String texto, Context context, Typeface typeface, int anchoPantalla, int inicioY) {
         this.imagen = ninePatchDrawable;
         this.texto = texto;
@@ -28,11 +40,21 @@ public class Boton {
         this.imagen.setBounds(this.rect);
     }
 
+    /**
+     * Funcion que dibuja el boton en el canvas
+     * @param canvas canvas donde dibujar el botón
+     */
     public void dibujar(Canvas canvas) {
         this.imagen.draw(canvas);
         canvas.drawText(this.texto, this.rect.left + this.dp6, this.rect.top + this.dp6 * 3, this.paint);
     }
 
+    /**
+     * Funcion que comprueba si el punto pasado esta dentro del botón
+     * @param x coordenada x del punto
+     * @param y coordenada y del punto
+     * @return true si esta dentro del boton o false en el caso contrario
+     */
     public boolean isClickBoton(int x, int y) {
         return rect.contains(x, y);
     }
