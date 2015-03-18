@@ -96,8 +96,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Boton botonCompartir;
     private GoogleApiClient mGoogleApiClient;
     private SoundPool efectos;
-    private int sonidoFinJuego;
-    private int sonidoExplosion;
+    private int sonidoFinJuego ,sonidoExplosion, sonidoClickBoton;
 
     public JuegoSurfaceView(Context context, GoogleApiClient googleApiClient) {
         super(context);
@@ -109,6 +108,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.efectos = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
             this.sonidoFinJuego = this.efectos.load(this.context, R.raw.fin_juego, 1);
             this.sonidoExplosion = this.efectos.load(this.context, R.raw.explode, 1);
+            this.sonidoClickBoton = this.efectos.load(this.context, R.raw.click, 1);
             this.mediaPlayer = MediaPlayer.create(this.context, R.raw.musica_fondo);
             this.mediaPlayer.setVolume((float) this.ajustes.volumenMusica / 100, (float) this.ajustes.volumenMusica / 100);
             this.mediaPlayer.setLooping(true);
@@ -576,6 +576,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                     if (this.juegoTerminado && event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                         // Click boton compartir
                         if (this.botonCompartir.isClickBoton((int) posicion.x, (int) posicion.y)) {
+                            if (this.ajustes.musica)
+                                this.efectos.play(this.sonidoClickBoton, this.ajustes.volumenMusica, this.ajustes.volumenMusica, 1, 0, 1);
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_SEND);
                             intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.texto_compartir, (int) this.puntuacion));
@@ -584,6 +586,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                         }
                         // Click boton aceptar
                         if (this.botonAceptar.isClickBoton((int) posicion.x, (int) posicion.y)) {
+                            if (this.ajustes.musica)
+                                this.efectos.play(this.sonidoClickBoton, this.ajustes.volumenMusica, this.ajustes.volumenMusica, 1, 0, 1);
                             LayoutInflater inflater = LayoutInflater.from(this.context);
                             AlertDialog alert = new AlertDialog.Builder(context)
                                     .setView(inflater.inflate(R.layout.introducir_nombre_dialog, null))

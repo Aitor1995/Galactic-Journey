@@ -15,6 +15,7 @@ import com.aitor1995.galactic_journey.R;
 import com.aitor1995.galactic_journey.adapters.AdapterRecords;
 import com.aitor1995.galactic_journey.sqlite.RecordsContract.RecordEntry;
 import com.aitor1995.galactic_journey.sqlite.RecordsSQLiteHelper;
+import com.aitor1995.galactic_journey.utils.AjustesApp;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.games.Games;
@@ -23,10 +24,12 @@ public class RecordsActivity extends BaseActivity {
     private static final int REQUEST_LEADERBOARD = 10000;
     private SoundPool soundPool;
     private int soundClickBoton;
+    private AjustesApp ajustes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.ajustes = AjustesApp.getInstance(this);
         setContentView(R.layout.activity_records);
         RecordsSQLiteHelper recordsSQLiteHelper = new RecordsSQLiteHelper(this);
         SQLiteDatabase db = recordsSQLiteHelper.getReadableDatabase();
@@ -43,12 +46,15 @@ public class RecordsActivity extends BaseActivity {
         if (!mSharedPreferences.getBoolean(BaseActivity.KEY_INICIO_SESION, true)) {
             findViewById(R.id.buttonMarcadores).setVisibility(View.INVISIBLE);
         }
-        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-        soundClickBoton = soundPool.load(this, R.raw.click, 1);
+        if (this.ajustes.musica) {
+            soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+            soundClickBoton = soundPool.load(this, R.raw.click, 1);
+        }
     }
 
     public void onMenuClick(View view) {
-        soundPool.play(soundClickBoton, 1, 1, 1, 0, 1);
+        if (this.ajustes.musica)
+            soundPool.play(soundClickBoton, this.ajustes.volumenMusica, this.ajustes.volumenMusica, 1, 0, 1);
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
@@ -63,7 +69,8 @@ public class RecordsActivity extends BaseActivity {
     }
 
     public void onMarcadoresClick(View view) {
-        soundPool.play(soundClickBoton, 1, 1, 1, 0, 1);
+        if (this.ajustes.musica)
+            soundPool.play(soundClickBoton, this.ajustes.volumenMusica, this.ajustes.volumenMusica, 1, 0, 1);
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, getString(R.string.leaderboard_marcador)), REQUEST_LEADERBOARD);
         }
