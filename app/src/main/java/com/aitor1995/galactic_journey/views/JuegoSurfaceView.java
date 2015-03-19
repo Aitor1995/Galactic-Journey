@@ -748,6 +748,8 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
                             boton.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    if (ajustes.musica)
+                                        efectos.play(sonidoClickBoton, ajustes.volumenMusica, ajustes.volumenMusica, 1, 0, 1);
                                     if (!editText.getText().toString().trim().equals("")) {
                                         RecordsSQLiteHelper recordsSQLiteHelper = new RecordsSQLiteHelper(context);
                                         SQLiteDatabase db = recordsSQLiteHelper.getWritableDatabase();
