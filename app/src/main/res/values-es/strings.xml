@@ -22,4 +22,5 @@
     <string name="title_activity_opciones">Opciones</string>
     <string name="title_activity_records">Récords</string>
     <string name="aceptar">Aceptar</string>
+    <string name="texto_notificacion">Tu nave se esta oxidando. Ven a jugar.</string>
 </resources>

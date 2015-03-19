@@ -39,5 +39,6 @@
     <string name="title_activity_opciones">Settings</string>
     <string name="title_activity_records">Records</string>
     <string name="aceptar">Accept</string>
+    <string name="texto_notificacion">Your ship is rusting. Come play.</string>
 
 </resources>

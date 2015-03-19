@@ -1,8 +1,15 @@
 package com.aitor1995.galactic_journey.activities;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -61,6 +68,24 @@ public class BaseActivity extends ActionBarActivity implements GoogleApiClient.C
     @Override
     protected void onStop() {
         super.onStop();
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Notification.Builder mBuilder =
+                new Notification.Builder(this)
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                        .setSmallIcon(R.drawable.ic_notificacion)
+                        .setVibrate(new long[]{100,300})
+                        .setSound(alarmSound)
+                        .setAutoCancel(true)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText(getString(R.string.texto_notificacion));
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, mBuilder.build());
         if (mSharedPreferences.getBoolean(KEY_INICIO_SESION, true))
             mGoogleApiClient.disconnect();
     }
