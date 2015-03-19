@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -68,12 +66,11 @@ public class BaseActivity extends ActionBarActivity implements GoogleApiClient.C
     @Override
     protected void onStop() {
         super.onStop();
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Notification.Builder mBuilder =
                 new Notification.Builder(this)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                         .setSmallIcon(R.drawable.ic_notificacion)
-                        .setSound(alarmSound)
+                        .setVibrate(new long[]{0L})
                         .setAutoCancel(true)
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText(getString(R.string.texto_notificacion));
