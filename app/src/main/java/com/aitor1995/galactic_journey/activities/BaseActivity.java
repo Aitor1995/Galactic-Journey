@@ -73,7 +73,6 @@ public class BaseActivity extends ActionBarActivity implements GoogleApiClient.C
                 new Notification.Builder(this)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                         .setSmallIcon(R.drawable.ic_notificacion)
-                        .setVibrate(new long[]{100,300})
                         .setSound(alarmSound)
                         .setAutoCancel(true)
                         .setContentTitle(getString(R.string.app_name))
