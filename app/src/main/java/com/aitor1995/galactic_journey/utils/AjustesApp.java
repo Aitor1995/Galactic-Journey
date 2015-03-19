@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import com.aitor1995.galactic_journey.R;
 
 /**
- * Clase en la que se leen los ajustes de la aplicacion
+ * Ajustes de la aplicación
  */
 public class AjustesApp {
     public static AjustesApp ajustes;
@@ -31,14 +31,25 @@ public class AjustesApp {
         ajustes = null;
     }
 
+    /**
+     * Archivo donde se guardan las preferencias
+     */
     private SharedPreferences sharedPreferences;
 
+    /**
+     * Tipo de control de juego
+     */
     public String controlJuego;
+    /**
+     * Si quiere o no música
+     */
     public boolean musica;
+    /**
+     * Nivel del volumen de la música
+     */
     public int volumenMusica;
 
     /**
-     * Constructor que lee los ajustes de la aplicacion de los sharedPreferences
      * @param context contexto de la aplicacion
      */
     private AjustesApp(Context context) {

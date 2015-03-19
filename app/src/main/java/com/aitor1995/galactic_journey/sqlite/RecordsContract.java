@@ -4,7 +4,7 @@ import android.provider.BaseColumns;
 
 public final class RecordsContract {
     /**
-     * Clase que representa las columnas de la tabla de records
+     * Representa las columnas de la tabla de records
      */
     public static abstract class RecordEntry implements BaseColumns {
         public static final String NOMBRE_TABLA = "records";

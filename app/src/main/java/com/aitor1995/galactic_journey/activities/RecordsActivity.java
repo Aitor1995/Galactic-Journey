@@ -21,9 +21,21 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.games.Games;
 
 public class RecordsActivity extends BaseActivity {
+    /**
+     * Código para el resultCode
+     */
     private static final int REQUEST_LEADERBOARD = 10000;
+    /**
+     * Gestiona los efectos de la aplicación
+     */
     private SoundPool soundPool;
+    /**
+     * Efecto de click a un botón
+     */
     private int soundClickBoton;
+    /**
+     * Ajustes de la aplicación
+     */
     private AjustesApp ajustes;
 
     @Override

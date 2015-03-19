@@ -4,15 +4,20 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 
 /**
- * Clase que representa una nave
+ * Representa una nave
  */
 public class Nave extends Imagen {
+    /**
+     * Rectángulos de la nave
+     */
     public RectF[] rectangulos = new RectF[2];
+    /**
+     * Vidas de la nave
+     */
     public int vidas = 3;
 
     /**
-     * Constructor que crea una nave desde una imagen y un punto de origen
-     * @param imagen imagen de la nave
+     * @param imagen imágen de la nave
      * @param x coordenada x del punto
      * @param y coordenada y del punto
      */
@@ -22,7 +27,7 @@ public class Nave extends Imagen {
     }
 
     /**
-     * Establece los rectangulos para las colisiones
+     * Establece los rectángulos para las colisiones
      */
     public void setRectangulos() {
         int anchoNave = this.imagen.getWidth();

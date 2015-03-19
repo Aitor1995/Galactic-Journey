@@ -4,17 +4,22 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 
 /**
- * Clase que representa una imagen y su posicion de inicio
+ * Representa una imágen y su posición de inicio
  */
 public class Imagen {
+    /**
+     * Posicion de la imágen
+     */
     public PointF posicion;
+    /**
+     * Bitmap de la imágen
+     */
     public Bitmap imagen;
 
     /**
-     * Crea una imagen
-     * @param imagen bitmap de la imagen
-     * @param x coordenada x de la imagen
-     * @param y coordenada y de la imagen
+     * @param imagen bitmap de la imágen
+     * @param x coordenada x de la imágen
+     * @param y coordenada y de la imágen
      */
     public Imagen(Bitmap imagen, float x, float y) {
         this.imagen = imagen;

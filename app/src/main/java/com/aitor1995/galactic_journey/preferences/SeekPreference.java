@@ -11,12 +11,24 @@ import android.widget.SeekBar;
 import com.aitor1995.galactic_journey.R;
 
 public class SeekPreference extends DialogPreference {
-
+    /**
+     * Valor por defecto
+     */
     private static final int DEFAULT_VALUE = 100;
+    /**
+     * Valor máximo y por defecto
+     */
     private int mMax, mDefault;
 
+    /**
+     * Componente donde elegir el volumen
+     */
     private SeekBar mSeekBar;
 
+    /**
+     * @param context contexto de la aplicación
+     * @param attrs atributos del xml
+     */
     public SeekPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         final TypedArray numberPickerType = context.obtainStyledAttributes(attrs, R.styleable.SeekPreference, 0, 0);

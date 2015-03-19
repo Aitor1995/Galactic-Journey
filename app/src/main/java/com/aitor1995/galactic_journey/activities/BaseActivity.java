@@ -18,8 +18,17 @@ import com.google.example.games.basegameutils.BaseGameUtils;
 
 public class BaseActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    /**
+     * Clave para las shared preferences
+     */
     public static final String KEY_INICIO_SESION = "inicio_sesion";
+    /**
+     * Cliente para las API de Google
+     */
     public GoogleApiClient mGoogleApiClient;
+    /**
+     * Código para el resultCode
+     */
     private static int RC_SIGN_IN = 9001;
     private boolean mResolvingConnectionFailure = false;
     private boolean mAutoStartSignInFlow = true;

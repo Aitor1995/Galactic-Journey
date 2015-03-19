@@ -9,8 +9,17 @@ import com.aitor1995.galactic_journey.utils.AjustesApp;
 import com.aitor1995.galactic_journey.views.JuegoSurfaceView;
 
 public class JuegoActivity extends BaseActivity {
+    /**
+     * SurfaceView del juego
+     */
     private JuegoSurfaceView juegoSurfaceView;
+    /**
+     * Si se pausa la música o no
+     */
     private boolean pausa = false;
+    /**
+     * Ajustes de la aplicación
+     */
     private AjustesApp ajustes;
 
     @Override

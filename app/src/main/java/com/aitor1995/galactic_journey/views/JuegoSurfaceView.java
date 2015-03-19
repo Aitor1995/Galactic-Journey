@@ -55,47 +55,177 @@ import java.util.Locale;
 import java.util.Random;
 
 public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener {
+    /**
+     * Tag para los logs
+     */
     private static final String TAG = JuegoSurfaceView.class.getSimpleName();
+    /**
+     * Diferencia de pixels para el move de la pantalla táctil
+     */
     private static final float MIN_DXDY = 2;
+    /**
+     *
+     */
     private final SurfaceHolder surfaceHolder;
+    /**
+     * Contexto de la aplicación
+     */
     private final Context context;
+    /**
+     * Ajustes de la aplicación
+     */
     private final AjustesApp ajustes;
+    /**
+     * Número de pixels para el tamaño del texto de la puntuacion
+     */
     private final float pixelsPuntuacion;
+    /**
+     * Para la música del juego
+     */
     public MediaPlayer mediaPlayer;
+    /**
+     * Para controlar los sensores
+     */
     public SensorManager sensorManager;
+    /**
+     * Fondos de la aplicación
+     */
     private Fondo[] fondos;
+    /**
+     * Bitmaps de los meteroitos
+     */
     private Bitmap[] bitmapsMeteoritos;
+    /**
+     * Bitmaps de los números
+     */
     private Bitmap[] bitmapsNumeros;
+    /**
+     * Bitmap del icono de la vida
+     */
     private Bitmap iconoNaveVida;
+    /**
+     * Bitmap X
+     */
     private Bitmap xVida;
+    /**
+     * Bitmap del numero de vidas
+     */
     private Bitmap numeroVida;
+    /**
+     * Panel de resultados
+     */
     private PanelResultados panelResultados;
+    /**
+     * Lsta de meteoritos en pantalla
+     */
     private ArrayList<Meteorito> meteoritos = new ArrayList<>();
+    /**
+     * Puntuación
+     */
     private double puntuacion = 0;
+    /**
+     * Nave
+     */
     private Nave nave;
+    /**
+     * Hilo que controla la física y el dibujo
+     */
     private Hilo hilo;
+    /**
+     * Juego terminado o no
+     */
     private boolean juegoTerminado = false;
+    /**
+     * Hash con las posiciones de las pulsaciones en la pantalla
+     */
     final private LinkedHashMap<Integer, PointF> posiciones = new LinkedHashMap<>();
+    /**
+     * Generador de numeros aleatorios
+     */
     private Random random = new Random();
+    /**
+     * Array para datos del acelerómetro
+     */
     private float[] gravity;
+    /**
+     * Array para datos del sensor de campo magnético
+     */
     private float[] geomagnetic;
+    /**
+     * Array para los datos de la orientación
+     */
     private float[] orientacion = new float[3];
+    /**
+     * Valor de orientacion de referencia
+     */
     private float valorOrientacionReferencia;
+    /**
+     * Pincel de la aplicación
+     */
     private Paint paint = new Paint();
-    private boolean funcionando = false, orientacionPrimeraVez = true;
+    /**
+     * Controla si el hilo sigue funcionando o no
+     */
+    private boolean funcionando = false;
+    /**
+     * Si lee la orientación por primera vez
+     */
+    private boolean orientacionPrimeraVez = true;
+    /**
+     * Ancho de la pantalla del dispositivo
+     */
     private int anchoPantalla;
+    /**
+     * Alto de la pantalla del dispositivo
+     */
     private int altoPantalla;
+    /**
+     * Tiempo para dormir el hilo
+     */
     long tiempoDormido = 0;
+    /**
+     * FPS deseados
+     */
     final int FPS = 30;
+    /**
+     * Ticks que queramos que se produzcan en un segundo
+     */
     final int TPS = 1000000000;
+    /**
+     * Tiempo que dura la vuelta
+     */
     final int FRAGMENTO_TEMPORAL = TPS / FPS;
+    /**
+     * Tiempo de referencia
+     */
     long tiempoReferencia = System.nanoTime();
+    /**
+     * Tipo de letra de los textos
+     */
     private Typeface typeface;
+    /**
+     * Vibracion del telefono
+     */
     private Vibrator vibrator;
+    /**
+     * Botón aceptar
+     */
     private Boton botonAceptar;
+    /**
+     * Botón compartir
+     */
     private Boton botonCompartir;
+    /**
+     * Cliente para las API de Google
+     */
     private GoogleApiClient mGoogleApiClient;
+    /**
+     * Getiona los efectos de la aplicación
+     */
     private SoundPool efectos;
+    /**
+     * Efectos de la aplicación
+     */
     private int sonidoFinJuego ,sonidoExplosion, sonidoClickBoton;
 
     public JuegoSurfaceView(Context context, GoogleApiClient googleApiClient) {
@@ -120,7 +250,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     /**
-     * Funcion que hace vibrar el dispositivo una cantidad de milisegundo
+     * Hace vibrar el dispositivo una cantidad de milisegundo
      *
      * @param milisegundos milisegundos que vibra el dispositivo
      */
@@ -159,10 +289,19 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             }
         }
 
+        /**
+         * Para o inicia el hilo
+         * @param flag true para iniciar y false para parar
+         */
         public void setFuncionando(boolean flag) {
             funcionando = flag;
         }
 
+        /**
+         * Establece el ancho y alto de la pantalla y redimensiona las imagenes
+         * @param width ancho de la pantalla
+         * @param height alto de la pantalla
+         */
         public void setSurfaceSize(int width, int height) {
             synchronized (surfaceHolder) {
                 anchoPantalla = width;
@@ -201,11 +340,15 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
                 iconoNaveVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.playerlife1_blue);
                 xVida = BitmapFactory.decodeResource(context.getResources(), R.drawable.numeralx);
-                numeroVida = bitmapsNumeros[3];
+                numeroVida = bitmapsNumeros[nave.vidas];
             }
         }
     }
 
+    /**
+     * Dibuja en el canvas
+     * @param canvas canvas donde se pinta
+     */
     private void dibujar(Canvas canvas) {
         try {
             // Dibuja los fondos
@@ -316,6 +459,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         return numeros;
     }
 
+    /**
+     * Actualiza la fisica de la aplicación
+     */
     private void actualizarFisica() {
         if (!this.juegoTerminado) {
             this.moverFondos();
@@ -345,7 +491,7 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     /**
-     * Muve los meteoritos y comprueba las colisiones. Controlando las vidas y logros del juego.
+     * Mueve los meteoritos y comprueba las colisiones. Controlando las vidas y logros del juego.
      */
     private void moverMeteoritosYColisiones() {
         for (int i = meteoritos.size() - 1; i >= 0; i--) {
@@ -492,6 +638,9 @@ public class JuegoSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             this.fondos[1].posicion.x = this.fondos[0].posicion.x + this.fondos[1].imagen.getWidth();
     }
 
+    /**
+     * Devuelve el hilo del surface view
+     */
     public Hilo getHilo() {
         return this.hilo;
     }

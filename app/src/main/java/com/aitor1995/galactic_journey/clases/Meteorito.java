@@ -4,16 +4,27 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 
 /**
- * Clase que representa a un meteorito
+ * Representa a un meteorito
  */
 public class Meteorito extends Imagen {
+    /**
+     * Tamaño del meteorito
+     */
     private final int tamanio;
+    /**
+     * Velocidad del meteorito
+     */
     private final int velocidad;
+    /**
+     * Ángulo del meteorito
+     */
     private final int angulo;
+    /**
+     * Rectángulos de los meteoritos
+     */
     public RectF[] rectangulos = new RectF[3];
 
     /**
-     * Constructor que crea un meteorito en un punto
      * @param imagen bitmap del meteorito
      * @param x posicion x del punto
      * @param y posicion y del punto
@@ -83,7 +94,7 @@ public class Meteorito extends Imagen {
     }
 
     /**
-     * Mueve el meteorito teniendo en cuenta su velocidad y angulo
+     * Mueve el meteorito teniendo en cuenta su velocidad y ángulo
      */
     public void mover() {
         this.posicion.x -= this.velocidad * Math.sin(Math.toRadians(90 - this.angulo));
